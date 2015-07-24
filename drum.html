@@ -24,6 +24,7 @@ body {
 
 <body>
 <div id="info">demo page<br/>
+<a href = "javascript:Start();">Start</a>
 
 </div>
 
@@ -35,6 +36,7 @@ body {
 var camera, scene, renderer, light, controls;
 var clock = new THREE.Clock();
 var gcontrols;
+var start=0;
 var sticks;
 var angle = 0.2, angle2 = 0.2;
 var check = 1, check2 = 1;
@@ -73,13 +75,14 @@ function init() {
 	
 	gcontrols = {
         speed:10.,
-        high:0.1
+        high:0.1,
+		bpm:60.
     };
 	var gui = new dat.GUI();
 	gui.domElement.id = 'gui';
-	gui.add(gcontrols, 'speed', 50, 200);
-	gui.add(gcontrols, 'high', 0.2, 2);
-	
+	//gui.add(gcontrols, 'speed', 50, 200);
+	//gui.add(gcontrols, 'high', 0.2, 2);
+	gui.add(gcontrols, 'bpm', 60, 120);
     document.body.appendChild(renderer.domElement);
 }
 
@@ -130,7 +133,7 @@ function Drumsticks(){
 	sticks.position.set(-20,50,95);
 	sticks2.position.set(20,50,75);
 	scene.add(sticks);
-	scene.add(sticks2);
+	//scene.add(sticks2);
 }
 
 function Drum(){
@@ -145,21 +148,36 @@ function Drum(){
 	scene.add(drum);
 	
 }
+function Start(){
+	start ^= 1;
+}
+
 function animate() {
 
-
-	sticks.rotation.x = angle;
-	sticks2.rotation.x = angle;
-	controls.update();
-	
-	
-	
-	update();
+	if(start){
+		angle = (gcontrols.bpm * clock.getElapsedTime()) % 60;
+		if(angle<30){
+			sticks.rotation.x = (angle-11)*Math.PI/180;
+		}else{
+			sticks.rotation.x = ((60-angle)-11)*Math.PI/180;
+		}
+	}
+	/*var T = 60/gcontrols.bpm;
+	if(start){
+		var elapsed = clock.getElapsedTime();
+		if (elapsed%T < T/2) {
+			sticks.rotation.x += 0.2*(0.2/T);
+		} else {
+			sticks.rotation.x -= 0.2*(0.2/T);
+		}
+	}*/
+    controls.update();
+	//update();
     requestAnimationFrame(animate);
     render();
 }
 
-function update(){
+/*function update(){
 
 		if(check){
 			angle -= gcontrols.speed* clock.getDelta() * Math.PI/180;
@@ -171,7 +189,7 @@ function update(){
 			if(angle > gcontrols.high)
 				check = 1;
 		}
-}
+}*/
 
 function render() {
 
