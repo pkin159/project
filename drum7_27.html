@@ -38,23 +38,22 @@ body {
 // keyframe animation
 
 var keyframes = [];  // array of objects
-var thetaMaxR = .5;
-var thetaMaxL = .9;
+var thetaMax = .4;
+var thetaSta = .2;
 var thetaHit = -.2;
-var intensity= [1, 0, 0, 0];
-
-
 
 var keyframesL = [
-    {key: 0, value: thetaMaxL},
-    {key: 0.5, value: thetaHit},
-    {key: 1, value: thetaMaxL}
+    {key: 0, value: thetaSta},
+    {key: 0.1, value: thetaHit},
+    {key: 0.6, value: thetaMax},
+    {key: 1, value: thetaSta}
 ];
 
 var keyframesR = [
-    {key: 0, value: thetaHit},
-    {key: 0.5, value: thetaMaxR},
-    {key: 1, value: thetaHit}
+    {key: 0, value: thetaSta},
+    {key: 0.1, value: thetaMax},
+    {key: 0.6, value: thetaHit},
+    {key: 1 , value: thetaSta}
 ];
 
 function Interpolator (keyframes, s) {
@@ -87,7 +86,7 @@ var sticks;
 var angle = 0.2, angle2 = 0.2;
 var play, CheckF, Check;
 
-var count = 0;
+var counter = 0;
 
 init();
 animate();
@@ -231,25 +230,12 @@ function animate() {
 	if(play){
 		var elapsed = clock.getElapsedTime();
 		var S = ( elapsed - startT )% T / T;
-
-		if(gcontrols.NOS >= 1){
-			/*if(count%4===0)
-				thetaMaxL = .7;
-			else if(count%4===2){
-				thetaMaxL = .5;
-			}*/
-			console.log('count',count);
-			console.log('thetaMaxL',thetaMaxL);
+		if(gcontrols.NOS >= 1)
 			sticks.rotation.x = Interpolator ( keyframesL, S);
-			if(S >= .9)
-				count++;
-		}
-		if(gcontrols.NOS >= 2){
+		if(gcontrols.NOS >= 2)
 			sticks2.rotation.x = Interpolator (keyframesR, S);
-			if(S >= .9)
-				count++;
-		}
 	}
+	console.log(elapsed);
     controls.update();
 	//update();
     requestAnimationFrame(animate);
