@@ -24,7 +24,7 @@ body {
 
 <body>
 <div id="info">demo page<br/>
-<a href = "javascript:Play();">play</a>
+<a href = "javascript:playScore();">play</a>
 
 </div>
 
@@ -35,59 +35,106 @@ body {
 <script>
 
 
-// keyframe animation
-// keyframe animation
-var keyframes = []; // array of objects
-var thetaMaxR = .3;
-var thetaMaxL = .3;
-var thetaHit = -.2;
-var keyframesL = [{
-    key: 0,
-    value: thetaMaxL
-}, {
-    key: 0.5,
-    value: thetaHit
-}, {
-    key: 1,
-    value: thetaMaxL
-}];
-var keyframesR = [{
-    key: 0,
-    value: thetaHit
-}, {
-    key: 0.5,
-    value: thetaMaxR
-}, {
-    key: 1,
-    value: thetaHit
-}];
+
 ////////init
 var camera, scene, renderer, light, controls, gcontrols;
 var clock = new THREE.Clock();
 ///////geometry
-var sticks;
+var stick1;
 ///////animate
+var hit;
 var startT;
-var angle = 0.2,
-    angle2 = 0.2;
 //////play & stop
-var play, CheckF, Check;
+var play, checkF, check;
 var count = 0;
+
+
+var Stick = function(){
+    this.bpm = 0;
+    this.intensity = .3;
+    this.thetaHit = -.2;
+    this.thetaMax = this.intensity;
+    this.thetaStandby = .1;
+    this.stopS = 0;
+    this.S = 0;
+    this.check = true;
+    this.keyframes = [
+        {key: 0, value: this.thetaStandby},
+        {key: .3, value: this.thetaMax},
+        {key: .5, value: this.thetaHit},
+        {key: 1, value: this.thetaStandby}
+    ];
+    ///////geometry
+    this.mesh = THREE.Object3D();
+    this.position = new THREE.Vector3();
+};
+
+Stick.prototype.NewMesh = function(){
+    a = new THREE.Object3D();
+    var geometry = new THREE.CylinderGeometry(1.4, 1.4, 70, 32);
+    var material = new THREE.MeshPhongMaterial({
+        color: 0xffff00
+    });
+    var cylinder = new THREE.Mesh(geometry, material);
+
+    cylinder.rotation.x = Math.PI / 2;
+    cylinder.position.set(0, 0, -40);
+
+    var geometry1 = new THREE.CylinderGeometry(1.4, 0.8, 20, 32);
+    var cylinder2 = new THREE.Mesh(geometry1, material);
+
+    cylinder2.rotation.x = Math.PI / 2;
+    cylinder2.position.set(0, 0, -85);
+
+    var geometry3 = new THREE.SphereGeometry(1.5, 32, 32);
+    var sphere = new THREE.Mesh(geometry3, material);
+    sphere.position.set(0, 0, -95);
+
+    a.add(cylinder);
+    a.add(cylinder2);
+    a.add(sphere);
+
+    this.mesh = a;
+
+};
+Stick.prototype.Update = function(elapsed,startT,T){
+    this.mesh.position.copy(this.position);
+//debugger;
+    if(this.check){
+        this.S = (elapsed - startT) % T / T;
+
+         var angle = this.Interpolator(this.S);
+    }
+   
+    if((angle > this.thetaStandby && this.S > 0.01) && !this.check){
+        this.stopS = this.S;
+        this.mesh.rotation.x = angle;
+    }else{
+        this.mesh.rotation.x = angle;
+        this.check = false;
+    }
+    console.log("S",this.S);
+    console.log("elapsed", elapsed);
+    console.log("startT", startT);
+    console.log("T",T);
+
+};
+Stick.prototype.Interpolator = function(S){
+    for(var i = 0; i < this.keyframes.length; i++){
+        if(S > this.keyframes.key) continue;
+        else{
+            if(i != 0)--i;
+            break;
+        }
+    }
+    return this.keyframes[i].value + (S - this.keyframes[i].key) / (this.keyframes[i + 1].key - this.keyframes[i].key) * (this.keyframes[i + 1].value - this.keyframes[i].value);
+};
+Stick.prototype.UnLocked = function(){
+    this.check = true;
+}
 
 init();
 animate();
-
-function Interpolator(keyframes, s) {
-    for (var i = 0; i < keyframes.length; i++) {
-        if (s > keyframes[i].key) continue;
-        else {
-            if (i != 0)--i;
-            break; // between i & i+1
-        }
-    }
-
-    return keyframes[i].value + (s - keyframes[i].key) / (keyframes[i + 1].key - keyframes[i].key) * (keyframes[i + 1].value - keyframes[i].value);
-}
 
 function init() {
     scene = new THREE.Scene();
@@ -101,7 +148,12 @@ function init() {
     gridXZ.setColors(new THREE.Color(0xff0000), new THREE.Color(0x000000));
     scene.add(gridXZ);
 
-    Drumsticks();
+
+    stick1 = new Stick();
+    stick1.NewMesh();
+    scene.add(stick1.mesh);
+    stick1.position = new THREE.Vector3 (-20, 50, 95);
+
     Drum();
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
@@ -131,59 +183,6 @@ function init() {
     document.body.appendChild(renderer.domElement);
 }
 
-function Drumsticks() {
-    sticks = new THREE.Object3D();
-    sticks2 = new THREE.Object3D();
-
-    var geometry = new THREE.CylinderGeometry(1.4, 1.4, 70, 32);
-    var material = new THREE.MeshPhongMaterial({
-        color: 0xffff00
-    });
-    var cylinder = new THREE.Mesh(geometry, material);
-
-    cylinder.rotation.x = Math.PI / 2;
-    cylinder.position.set(0, 0, -40);
-
-    var geometry1 = new THREE.CylinderGeometry(1.4, 0.8, 20, 32);
-    var cylinder2 = new THREE.Mesh(geometry1, material);
-
-    cylinder2.rotation.x = Math.PI / 2;
-    cylinder2.position.set(0, 0, -85);
-
-    var geometry3 = new THREE.SphereGeometry(1.5, 32, 32);
-    var sphere = new THREE.Mesh(geometry3, material);
-    sphere.position.set(0, 0, -95);
-    ////////////////////////////////////////////
-
-    var material2 = new THREE.MeshPhongMaterial({
-        color: 0xff0000
-    });
-    var cylinder_2 = new THREE.Mesh(geometry, material2);
-
-    cylinder_2.rotation.x = Math.PI / 2;
-    cylinder_2.position.set(0, 0, -20);
-
-    var cylinder2_2 = new THREE.Mesh(geometry1, material2);
-
-    cylinder2_2.rotation.x = Math.PI / 2;
-    cylinder2_2.position.set(0, 0, -65);
-
-    var sphere_2 = new THREE.Mesh(geometry3, material2);
-    sphere_2.position.set(0, 0, -75);
-
-    sticks.add(cylinder);
-    sticks.add(cylinder2);
-    sticks.add(sphere);
-
-    sticks2.add(cylinder_2);
-    sticks2.add(cylinder2_2);
-    sticks2.add(sphere_2);
-
-    sticks.position.set(-20, 50, 95);
-    sticks2.position.set(20, 50, 75);
-    scene.add(sticks);
-    scene.add(sticks2);
-}
 
 function Drum() {
     var drum = new THREE.Object3D();
@@ -234,35 +233,16 @@ function Drum() {
 
 }
 
-function Play() {
-    if (!CheckF) {
-        startT = clock.getElapsedTime();
-        play = !play;
-        CheckF = !CheckF;
-    } else {
-        play = !play;
-        if (!play) {
-            console.log("T for stop");
-            clock.stop();
-        }
-    }
-}
-
 
 function animate() {
 
     var T = 60 / gcontrols.bpm * gcontrols.NOS;
 
-    if (play) {
-        var elapsed = clock.getElapsedTime();
-        var S = (elapsed - startT) % T / T;
 
-        if (gcontrols.NOS >= 1) {
-            sticks.rotation.x = Interpolator(keyframesL, S);
-        }
-        if (gcontrols.NOS >= 2) {
-            sticks2.rotation.x = Interpolator(keyframesR, S);
-        }
+    if(hit){
+        var elapsed = clock.getElapsedTime();
+        stick1.Update(elapsed,startT,T);
+
     }
     controls.update();
     requestAnimationFrame(animate);
@@ -274,6 +254,47 @@ function render() {
     renderer.setClearColor(0x888888);
     renderer.render(scene, camera);
 }
+
+function HitOnce(intensity, T){
+    console.log("T", T);
+    console.log('ht once now', intensity)
+    stick1.UnLocked();
+    if(!checkF){
+        startT = clock.getElapsedTime();
+        hit = !hit;
+        checkF = !checkF;
+    }
+    console.log("hitstate", hit);
+}
+
+score = [{
+    time: 0,
+    intensity: 1,
+    T: 1
+}, {
+    time: 1000,
+    intensity: 0.5,
+    T:1
+}, {
+    time: 2000,
+    intensity: 0.7,
+    T:1
+}, ];
+
+///////////////////////////////wrong
+function playScore() {
+         for (var i = 0; i < score.length; i++) {
+         setTimeout (function(ii,t){HitOnce(ii,t);}(score[i].intensity, score[i].T), score[i].time);
+         }
+         }
+
+
+
+
+
+
+
+
 
 
 
