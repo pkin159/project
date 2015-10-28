@@ -1,6 +1,6 @@
 function drumSet(x, y, z) {
     
-    var drum = THREE.Object3D();
+    var drum = new THREE.Object3D();
 
     var extrudeSettings = {
         amount: 12,
