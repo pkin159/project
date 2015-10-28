@@ -120,7 +120,7 @@ function drumSet(x, y, z) {
     drum.add(lockbut2mesh);
     drum.position.set(x, y, z);
     
-    scene.add(drum);
+    return drum;
 
 }
 
@@ -205,7 +205,7 @@ function bassbrumSet(x, y, z) {
     bass.rotation.x = Math.PI / 2;
     bass.position.set(x, y, z);
     
-    scene.add(bass);
+    return bass;
 
 }
 
@@ -300,7 +300,7 @@ function hithatSet(x, y, z){
     
     hithat.position.set ( x, y, z );
     
-    scene.add(hithat);
+    return hithat;
     
 }
 
@@ -329,5 +329,5 @@ function chairSet(x, y, z){
     chair.add(standbuttonmesh);
     chair.add(standmesh);
     chair.position.set( x, y, z );
-    scene.add(chair);
+    return chair;
 }
