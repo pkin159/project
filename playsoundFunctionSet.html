@@ -1,0 +1,25 @@
+    playSound function
+    loadSounds(this, {
+        kick: 'https://jennyhyc.github.io/project/sounds/drum/bass.mp3',
+        snare: 'https://jennyhyc.github.io/project/sounds/drum/snare.mp3',
+        hihat: 'https://jennyhyc.github.io/project/sounds/drum/hatOp.mp3',
+        stick: 'https://jennyhyc.github.io/project/sounds/drum/stick.mp3'
+    });
+   
+    function playSound(buffer,time,intensity){
+
+	    var gainNode = context.createGain();
+	    var source = context.createBufferSource();
+	    source.buffer = buffer;
+
+	    // Connect source to a gain node
+	    source.connect(gainNode);
+	    // Connect gain node to destination
+	    gainNode.connect(context.destination);
+
+	    var gainval = intensity || 0.5;
+	    gainNode.gain.value = gainval;
+
+	    source[source.start ? 'start' : 'noteOn'](time);
+
+	}

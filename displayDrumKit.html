@@ -41,7 +41,7 @@ animate();
 function init() {
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.z = 500;
     scene.add(camera);
 
@@ -52,23 +52,59 @@ function init() {
     scene.add(bass);
     scene.add(chair);
 
-    light = new THREE.PointLight(0xffffff);
+    //normal light
+    light = new THREE.DirectionalLight(0xffffff);
     light.position.set(200, 500, 400);
+    light.castShadow = true;
+    light.shadowCameraNear = 200;
+    light.shadowCameraFar = camera.far;
+    light.shadowCameraFov = 50;
+    light.shadowBias = -0.00022;
+    light.shadowDarkness = 0.5;
+    light.shadowMapWidth = 2048;
+    light.shadowMapHeight = 2048;
+    light.target = snare;
     scene.add(light);
-
+/*
     var light2 = new THREE.PointLight(0xffffff);
     light2.position.set(-200, -300, -400);
     scene.add(light2);
-
+*/
+   
+/*
+    // spotlight
+    light = new THREE.SpotLight(0xffffff, 1.5);
+    light.position.set(100, 500, 100);
+    light.angle =  Math.PI / 6;
+    light.exponent = 20;
+    light.castShadow = true;
+    light.shadowCameraNear = 200;
+    light.shadowCameraFar = camera.far;
+    light.shadowCameraFov = 50;
+    light.shadowBias = -0.00022;
+    light.shadowDarkness = 0.5;
+    light.shadowMapWidth = 2048;
+    light.shadowMapHeight = 2048;
+    scene.add(light);
+    light.target = snare; // light follows the box
+*/
     frame = new THREE.Object3D();
     scene.add(frame);
     var axisHelper = new THREE.AxisHelper(100);
     frame.add(axisHelper);
     
+    var floor = new THREE.Mesh(new THREE.PlaneGeometry(800, 800, 30, 30),
+    new THREE.MeshLambertMaterial());
+    floor.rotation.x = -Math.PI / 2;
+    scene.add(floor);
+    floor.castShadow = true; floor.receiveShadow = true;
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x888888);
+    renderer.shadowMapEnabled = true;
+    renderer.shadowMapSoft = true;
+    renderer.shadowMapType = THREE.PCFShadowMap;
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 

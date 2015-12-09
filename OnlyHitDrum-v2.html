@@ -16,35 +16,42 @@ body {
 
 <body>
 <div id  = info><a href = "javascript:play();">play </a><br>
-				<a href = "javascript:reset();">reset </a><br>
-				
+				<a href = "javascript:stop();">stop </a>
 	</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js"></script>
 <script src="https://dl.dropboxusercontent.com/u/3587259/Code/Threejs/OrbitControls.js"></script>
-<script src="https://pkin159.github.io/project/drumsetting.js"></script>
 <script src='https://jyunming-chen.github.io/WebAudio/js/shared.js'></script>
 <script src="https://pkin159.github.io/project/js/dat.gui.min.js"></script>
-<script src="https://pkin159.github.io/project/scrolldemo.js"></script>
+<script src="https://pkin159.github.io/project/js/KeyboardState.js"></script>
+<script src="DrumKitGeometry-S.js"></script>
 <script>
 
 var frameStart, frameEnd;
 
-var intensity = 0.5;
+var intensity = 0.3;
 var instrument = "s";
-var bpm = 100;
-var sounds;
 
 gcontrols = {
-  		intensity: 0.1,
-  		bpm: 100.,
+  		intensity: 0.2,
+  		bpm: 160.,
+  		LR: true
   	};
-
+/*
   	var gui = new dat.GUI();
   	gui.domElement.id = 'gui';
-  	gui.add(gcontrols, 'intensity',0.1, 1).step(0.01);
+  	gui.add(gcontrols, 'intensity',0, 1).step(0.01);
   	gui.add(gcontrols, 'bpm', 60, 500).step(0.1);
-
+  	gui.add(gcontrols, 'LR');
+*/
+var SoundSample = function(){
+        loadSounds(this, {
+        bass: 'https://jennyhyc.github.io/project/sounds/drum/bass.mp3',
+        snare: 'https://jennyhyc.github.io/project/sounds/drum/snare.mp3',
+        hihat: 'https://jennyhyc.github.io/project/sounds/drum/hatOp.mp3',
+        stick: 'https://jennyhyc.github.io/project/sounds/drum/stick.mp3'
+    });
+}
 
 var Stick = function () {
     // properties
@@ -53,16 +60,13 @@ var Stick = function () {
         timeS: 0,
         value: 0
     }, {
-        timeS: 0.25,
+        timeS: 0.5,
         value: 0.2//3.14 / 4
     }, {
-        timeS: 0.3,
+        timeS: 0.6,
         value: -.2
     },
        {
-        timeS: 0.5,
-        value: 0
-    },{
         timeS: 1,
         value: 0
     }
@@ -75,29 +79,17 @@ var Stick = function () {
     this.startTime = 0;
     this.angle = 0; // for 'text-based' rendering
     this.instrument = 's';
-    this.soundintensity = 1;
     this.color = new THREE.Color(1,0,0);
     this.group = newMesh(this.color);
     this.object = new THREE.Object3D();
     this.object.add(this.group);
-    loadSounds(this, {
-        kick: 'https://jennyhyc.github.io/project/sounds/drum/bass.mp3',
-        snare: 'https://jennyhyc.github.io/project/sounds/drum/snare.mp3',
-        hihat: 'https://jennyhyc.github.io/project/sounds/drum/hatOp.mp3',
-        stick: 'https://jennyhyc.github.io/project/sounds/drum/stick.mp3'
-    });
+
     // methods
     this.setT = function (period) {
         this.T = period;
     }
     this.setMaxKeysValue = function (intensity){
         this.keys[1].value = intensity;
-    }
-    this.setSoundIntensity = function(intensity){
-    	this.soundintensity = intensity;
-    }
-    this.setInstrument = function(ins){
-    	this.instrument = ins;
     }
 
     this.interpolate = function (s) { // normalized time
@@ -121,83 +113,23 @@ var Stick = function () {
         this.group.rotation.x = this.angle;
         
         var quat = new THREE.Quaternion();
-   		
-        //console.log(this.tt);
          
         if(this.tt > 1){     
         	this.tt = 1;
         
         	THREE.Quaternion.slerp(this.frame1.quaternion, this.frame2.quaternion, quat , this.tt);
         
-        this.object.quaternion.copy (quat);
-        	//this.frame1.quaternion.copy(this.frame2.quaternion);
+            this.object.quaternion.copy (quat);
         } 
         
         var pos = this.frame1.position.lerp(this.frame2.position, s);
         this.group.position.set(pos.x, pos.y, pos.z);
-        console.log("group pos", this.group.position);
-
-        if(this.angle < (-.2+.05+(60/this.T)/1000)){
-        	if(!this.soundAlready()){
-        		this.soundAlready(1);
-        		switch (this.instrument){
-        			case 's':
-        				this.playSound(this.snare, 0, this.soundintensity);
-        				break;
-        			case 'st':
-        				this.playSound(this.stick, 0, this.soundintensity);
-        				break;
-    				case 'b':
-    					this.playSound(this.kick, 0, this.soundintensity);
-    					breakl
-    				case 'h':
-    					this.playSound(this.hihat, 0, this.soundintensity);
-    					break;
-        		}
-        		
-        	}
-        }
-
     }
 
     this.startOneCycle = function () {
         this.startTime = clock.getElapsedTime();
-        var i = this.soundAlready(0,1); // not used ....
     }
-    this.playSound = function(buffer,time,intensity){
-
-	    var gainNode = context.createGain();
-	    var source = context.createBufferSource();
-	    source.buffer = buffer;
-
-	    // Connect source to a gain node
-	    source.connect(gainNode);
-	    // Connect gain node to destination
-	    gainNode.connect(context.destination);
-
-	    var gainval = intensity || 0.5;
-	    gainNode.gain.value = gainval;
-
-	    source[source.start ? 'start' : 'noteOn'](time);
-
-	}
-	this.soundAlready = function(lock,reset){
-		var l = lock || 0;
-		this.check = this.check || 0;
-		var rs = reset || 0;
-
-		if(rs == 1){
-			this.check = 0;
-			return -1;
-		}
-		if(this.check == 0 && l == 0){
-			this.check = 1;
-			return 0;
-		}
-		else
-			return 1;
-		
-	}
+   
 }
 function newMesh(c){
     a = new THREE.Object3D();
@@ -230,6 +162,8 @@ function newMesh(c){
 
 var camera, scene, renderer, frame, frame1, frame2, light, controls;
 ////////init
+var keyboard = new KeyboardState();
+var gcontrols;
 var clock = new THREE.Clock();
 ///////geometry
 var stick1 = new Stick();
@@ -238,11 +172,18 @@ var stick2 = new Stick();
 //////play & stop
 var play, CheckF, Check;
 var count = 0;
+var bpm = 120;
+var gcontrols;
+
+var soundsample = new SoundSample();
 
 var poschair = new THREE.Vector3(0, 10, 0);
 var posbass = new THREE.Vector3(15,75,-185);
 var poshihat = new THREE.Vector3( -150, 120, -150);
 var possnare = new THREE.Vector3( -75,110, -90);
+
+var snare = Snare();
+snare.position.set(-75,115, -90);
 
 var chairframeR, hihatframeR, snareframeR;
 var chairframeL, hihatframeL, snareframeL;
@@ -269,28 +210,22 @@ function init() {
     }));
     
     
-    scene.add(drumSet(-75,110, -90));
+    scene.add(snare);
+
 
     chairframeR = new THREE.Object3D();
     chairframeR.position.set ( poschair.x+15, poschair.y+110, poschair.z );
     chairframeR.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), 0);
     snareframeR = new THREE.Object3D();
-    snareframeR.position.set (poschair.x+15, possnare.y+30, poschair.z-10) ;
+    snareframeR.position.set (poschair.x+15, possnare.y+43, poschair.z-10) ;
     snareframeR.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI/4);
-    standbyframeR = new THREE.Object3D();
-	standbyframeR.position.set ( poschair.x, poschair.y+130, poschair.z+30 );
-    standbyframeR.quaternion.setFromEuler(new THREE.Euler(Math.PI/12, Math.PI/4, 0, 'YZX' ))
-
+    
     chairframeL = new THREE.Object3D();
     chairframeL.position.set ( poschair.x-15, poschair.y+110, poschair.z );
     chairframeL.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), 0);
     snareframeL = new THREE.Object3D();
-    snareframeL.position.set (poschair.x-25, possnare.y+30, poschair.z-10) ; 
+    snareframeL.position.set (poschair.x-25, possnare.y+43, poschair.z-10) ; 
     snareframeL.quaternion.setFromAxisAngle(new THREE.Vector3(0,1,0), Math.PI/6);
-	standbyframeL = new THREE.Object3D();
-    standbyframeL.position.set ( poschair.x, poschair.y+115, poschair.z+30);
-    standbyframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/12, -Math.PI/4, 0, 'YZX' ))
-
 
     frame = new THREE.Object3D();
     scene.add(frame);
@@ -308,8 +243,7 @@ function init() {
     stick2.setT(0.5);
     stick2.startOneCycle();
     frame.add(stick2.object);
-  
-
+/*
     light = new THREE.PointLight(0xffffff);
     light.position.set(100, 300, 200);
     scene.add(light);
@@ -317,10 +251,32 @@ function init() {
     var gridXZ = new THREE.GridHelper(100, 10);
     gridXZ.setColors(new THREE.Color(0xff0000), new THREE.Color(0xffffff));
     scene.add(gridXZ);
-
+*/
+    light = new THREE.SpotLight(0xffffff, 1.5);
+    light.position.set(100, 500, 100);
+    light.angle =  Math.PI / 6;
+    light.exponent = 20;
+    light.castShadow = true;
+    light.shadowCameraNear = 200;
+    light.shadowCameraFar = camera.far;
+    light.shadowCameraFov = 50;
+    light.shadowBias = -0.00022;
+    light.shadowDarkness = 0.5;
+    light.shadowMapWidth = 2048;
+    light.shadowMapHeight = 2048;
+    scene.add(light);
+    light.target = snare; // light follows the box
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x888888);
+
+    var floor = new THREE.Mesh(new THREE.PlaneGeometry(800, 800, 30, 30),
+    new THREE.MeshLambertMaterial());
+    floor.rotation.x = -Math.PI / 2;
+    scene.add(floor);
+    floor.castShadow = true; floor.receiveShadow = true;
+
+
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
@@ -334,14 +290,26 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 ///////////////
-
+var lock
+function update()
+{
+    //controls.update();
+    keyboard.update();         
+    if ( keyboard.pressed("G") )   
+        lock = true;               
+    
+}
 
 function animate() {
-    
+
+    if(soundsample.snare !== undefined){
     stick1.update(clock.getElapsedTime());
     stick2.update(clock.getElapsedTime());
+    }
+    stick1.setT(60/gcontrols.bpm);
+    stick2.setT(60/gcontrols.bpm);
 
-
+    update();
     controls.update();
     requestAnimationFrame(animate);
     render();
@@ -350,117 +318,150 @@ function animate() {
 var setTimeoutControl = 1;
 var check = 1;
 function play(){
-	
-	if(check){
-		setTimeoutControl = 1;
-		standby();
-		//playScore1();
-		check = 0;
-	}
-}
-function reset(){
-	setTimeoutControl = 0;
-	check = 1;
-}
-var checkstip = 1;
-function stop(){
-	checkstop ^= 1;
-}
-
-var scrlltemp = scroll;
-
-function standby(){
-	console.log('standby true');
-	stick1.frame1 = standbyframeR.clone();
-    stick2.frame1 = standbyframeL.clone();
-	stick1.frame2 = standbyframeR.clone();
-    stick2.frame2 = standbyframeL.clone();
-	for (var i = 0; i < 4; i++) {
-        setTimeout(HitOnce, i *(60/bpm*1000)/2, 0.5, 'Right','st');
-    }
-
-    var firstR, firstL;
-
-    for(var j = 0; j < scrlltemp.length; j++){
-    	if(firstR !== undefined && firstL !== undefined)
-    		break;
-    	if (scrlltemp[j].LR === 'Right' && firstR === undefined)
-    		firstR = scrlltemp[j].instrument;
-    	
-    	if (scrlltemp[j].LR === 'Left' && firstL === undefined)
-    		firstL = scrlltemp[j].instrument;
-    	console.log(firstR);
-    	console.log(firstL);
-    }
-    setTimeout(setFirstLR, i * (60/bpm*1000)/2, firstL, firstR);
-    setTimeout(playScore1, i * (60/bpm*1000)/2);
-}
-
-function setFirstLR(instrumentL, instrumentR){
-	switch(instrumentR){
-		case 's':
-			stick1.frame1 = snareframeR.clone();
-		    stick1.frame2 = snareframeR.clone();
-		    break;
-		case 'h':  //////////when setting position hihat frame
-			break;
-		case 'b':  /////////when setting position bassframe
-			break;
-	}
-	switch(instrumentL){
-		case 's':
-			stick2.frame1 = snareframeL.clone();
-		    stick2.frame2 = snareframeL.clone();
-		    break;
-		case 'h':  //////////when setting position hihat frame
-			break;
-		case 'b':  /////////when setting position bassframe
-	}
-}
-
-
-function HitOnce(intensity, LR, instrument) {
-    var ii = intensity || (3.14/4);
-    var lr = LR || 'Right';
-    var ins = instrument || 's';
     
-        if(lr === 'Right' ){
+    if(check){
+        setTimeoutControl = 1
+        HitOnce();
+        check = 0;
+    }
+}
+
+function stop(){
+    setTimeoutControl = 0;
+    check = 1;
+    time = 0;
+    gcontrols.intensity =0.2;
+    gcontrols.bpm = 160;
+}
+
+var time = 0
+function playSound(buffer,time,intensity){
+
+    var gainNode = context.createGain();
+    var source = context.createBufferSource();
+    source.buffer = buffer;
+
+    // Connect source to a gain node
+    source.connect(gainNode);
+    // Connect gain node to destination
+    gainNode.connect(context.destination);
+
+    var gainval = intensity || 0.5;
+    gainNode.gain.value = gainval;
+
+    source[source.start ? 'start' : 'noteOn'](time);
+}
+
+function HitOnce(intensity) {
+    
+    time = time + 1;
+    this.lr = (time % 2 === 0) ? "Right" : "Left";
+    
+    var ii = intensity || gcontrols.intensity;
+    var ins = instrument;
+    
+    if(!gcontrols.LR){
+        lr = 'Right';
+        stick2.object.visible;
+    }
+
+    if(lock){
+        temp = ii;
+        ii = 1;
+    }
+
+    console.log(time);
+    console.log('intensity'+ii);
+    console.log('bpm'+gcontrols.bpm);
+    if(lr === 'Right' ){
     
             if(ins ==='s')
                 stick1.frame2 = snareframeR.clone();
             if(ins ==='h')
                 stick1.frame2 = hihatframeR.clone();
-            if(ins ==='st'){
-            	stick1.frame2 = standbyframeR.clone();
-            }
-            stick1.setInstrument(ins)
-            stick1.setSoundIntensity(ii)
+            
+            
             stick1.setMaxKeysValue(ii);
             stick1.startOneCycle();
-        	
+            
         }
-    	if(lr === 'Left' ){
+        
+    if(lr === 'Left' ){
         
             if(ins ==='s')
                 stick2.frame2 = snareframeL.clone();
             if(ins ==='h')
                 stick2.frame2 = hihatframeL.clone();
-
-            stick2.setInstrument(ins)
-            stick2.setSoundIntensity(ii)
+            
             stick2.setMaxKeysValue(ii);
+          
             stick2.startOneCycle();
             
-        }
-}
-
-function playScore1() {
-    for (var i = 0; i < scrlltemp.length; i++) {
-        setTimeout(HitOnce, scrlltemp[i].time *(60/bpm*1000)/2, scrlltemp[i].intensity, scrlltemp[i].LR, scrlltemp[i].instrument);
-
     }
-    setTimeout(playScore1, scrlltemp[scrlltemp.length].time *(60/bpm*1000)/2);
+
+    switch (this.instrument){
+        case 's':
+            this.playSound(soundsample.snare, 0, ii);
+            break;
+        case 'st':
+            this.playSound(soundsample.stick, 0, ii);
+            break;
+        case 'b':
+            this.playSound(soundsample.bass, 0, ii);
+            breakl
+        case 'h':
+            this.playSound(soundsample.hihat, 0, ii);
+            break;
+    }  
+
+    if((time%10 === 0) && time <= 120)
+        IntensityUPDown(1);
+    if(time%20 === 0 && (time > 130 && time < 600))
+        BpmUpDown(1);
+    if(time%20 === 0 && (time > 130 && time < 230))
+        IntensityUPDown(0);
+    if(time%20 === 0 && (time > 600  && time < 1300))
+        BpmUpDown(0);
+    if(time%100 === 0 && (time > 600 && time < 1300))
+        IntensityUPDown(1);    
+    if((gcontrols.bpm === 60 && time > 1300) && time%5 === 0)
+        IntensityUPDown(0);
+    if(gcontrols.intensity === 0.1 && (gcontrols.bpm === 60 && time > 1300))
+        stop();
+
+    if(setTimeoutControl)
+        if(lock)
+    	   setTimeout(HitOnce, (60/gcontrols.bpm*1000)/2, temp);
+        else
+           setTimeout(HitOnce, (60/gcontrols.bpm*1000)/2);
+    lock = false;
 }
+
+function IntensityUPDown(controls){
+    if(controls === 1){
+        gcontrols.intensity +=0.05;
+        if(gcontrols.intensity >= 1)
+            gcontrols.intensity = 1;
+    }
+    if(controls === 0){
+        gcontrols.intensity = gcontrols.intensity - 0.05;
+        if(gcontrols.intensity <= 0)
+            gcontrols.intensity = 0.1;
+    }
+}
+
+function BpmUpDown(controls){
+    if(controls === 1){
+        gcontrols.bpm +=10;
+        if(gcontrols.bpm >= 500)
+            gcontrols.bpm = 500;
+    }else if(controls === 0){
+        gcontrols.bpm = gcontrols.bpm - 10;
+        if(gcontrols.bpm <= 60)
+            gcontrols.bpm = 60;
+    }
+}
+
 function render() {
     renderer.render(scene, camera);
 }
