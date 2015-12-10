@@ -18,14 +18,15 @@ body {
 <div>
     <button id='play' class='buttonclass'>Play</button>
     <button id='stop' class='buttonclass'>Stop</button>
+    <button id='accent' class='buttonclass'>Accent</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js"></script>
 <script src="https://dl.dropboxusercontent.com/u/3587259/Code/Threejs/OrbitControls.js"></script>
 <script src='https://jyunming-chen.github.io/WebAudio/js/shared.js'></script>
 <script src="https://pkin159.github.io/project/js/dat.gui.min.js"></script>
-<script src="https://pkin159.github.io/project/js/jquery-2.1.4.min.js"></script>
 <script src="https://pkin159.github.io/project/js/KeyboardState.js"></script>
+<script src="project/js/jquery-2.1.4.min.js"></script>
 <script src="DrumKitGeometry-S.js"></script>
 <script>
 
@@ -82,15 +83,15 @@ var Stick = function () {
     this.angle = 0; // for 'text-based' rendering
     this.instrument = 's';
     this.color = new THREE.Color(1,0,0);
-    this.group = newMesh();
+    this.group = newMesh(this.color);
+    this.object = new THREE.Object3D();
+    this.object.add(this.group);
 
     // methods
     this.setT = function (period) {
         this.T = period;
     }
-    this.setMaxKeysValue = function (intensity){    this.object = new THREE.Object3D();
-    this.object.add(this.group);
-
+    this.setMaxKeysValue = function (intensity){
         this.keys[1].value = intensity;
     }
 
@@ -222,14 +223,14 @@ function init() {
     chairframeR.position.set (snare.position.x+10, snare.position.y+40, snare.position.z+100);
     chairframeR.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), 0);
     snareframeR = new THREE.Object3D();
-    snareframeR.position.set (snare.position.x+10, snare.position.y+40, snare.position.z+100) ;
+    snareframeR.position.set (snare.position.x+9, snare.position.y+40, snare.position.z+90) ;
     snareframeR.quaternion.setFromEuler(new THREE.Euler(0, Math.PI/4, 0, 'YXZ'));
     
     chairframeL = new THREE.Object3D();
     chairframeL.position.set (snare.position.x-10, snare.position.y+40, snare.position.z+100);
     chairframeL.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), 0);
     snareframeL = new THREE.Object3D();
-    snareframeL.position.set (snare.position.x-10, snare.position.y+40, snare.position.z+100) ; 
+    snareframeL.position.set (snare.position.x-9, snare.position.y+40, snare.position.z+90) ; 
     snareframeL.quaternion.setFromEuler(new THREE.Euler(0, -Math.PI/4, 0, 'YXZ'));
 
     frame = new THREE.Object3D();
@@ -300,15 +301,6 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 ///////////////
-var lock
-function update()
-{
-    //controls.update();
-    keyboard.update();         
-    if ( keyboard.pressed("G") )   
-        lock = true;               
-    
-}
 
 function animate() {
 
@@ -319,7 +311,6 @@ function animate() {
     stick1.setT(60/gcontrols.bpm);
     stick2.setT(60/gcontrols.bpm);
 
-    update();
     controls.update();
     requestAnimationFrame(animate);
     render();
@@ -327,22 +318,36 @@ function animate() {
 
 var setTimeoutControl = 1;
 var check = 1;
-function play(){
-    
+$('#play').click(function(){
     if(check){
         setTimeoutControl = 1
-        HitOnce();
+        HitOnce(gcontrols.ii);
         check = 0;
+        lock = false;
     }
-}
+});
 
-function stop(){
+$('#stop').click(function(){
     setTimeoutControl = 0;
     check = 1;
     time = 0;
     gcontrols.intensity =0.2;
     gcontrols.bpm = 160;
+});
+
+function stop(){
+	setTimeoutControl = 0;
+	check = 1;
+	time = 0;
+	gcontrols.intensity = 0.2;
+	gocontrols.bpm = 160;
 }
+
+var lock = false;
+$('#accent').click(function(){
+	lock = true;
+	console.log(lock);
+});
 
 var time = 0
 function playSound(buffer,time,intensity){
@@ -362,6 +367,7 @@ function playSound(buffer,time,intensity){
     source[source.start ? 'start' : 'noteOn'](time);
 }
 
+
 function HitOnce(intensity) {
     
     time = time + 1;
@@ -375,9 +381,10 @@ function HitOnce(intensity) {
         stick2.object.visible;
     }
 
-    if(lock){
-        temp = ii;
-        ii = 1;
+    this.temp = undefined;
+
+    if(lock && this.tempii === undefined){
+    	this.tempii = ii;
     }
 
     console.log(time);
@@ -424,28 +431,29 @@ function HitOnce(intensity) {
             break;
     }  
 
-    if((time%10 === 0) && time <= 120)
+    if((time%10 === 0) && time <= 100)
         IntensityUPDown(1);
-    if(time%20 === 0 && (time > 130 && time < 600))
+    if(time%10 === 0 && (time > 130 && time < 500))
         BpmUpDown(1);
     if(time%20 === 0 && (time > 130 && time < 230))
         IntensityUPDown(0);
-    if(time%20 === 0 && (time > 600  && time < 1300))
+    if(time%10 === 0 && (time > 500  && time < 950))
         BpmUpDown(0);
-    if(time%100 === 0 && (time > 600 && time < 1300))
-        IntensityUPDown(1);    
-    if((gcontrols.bpm === 60 && time > 1300) && time%5 === 0)
+    if((gcontrols.bpm === 60 && time > 930) && time%5 === 0)
         IntensityUPDown(0);
-    if(gcontrols.intensity === 0.1 && (gcontrols.bpm === 60 && time > 1300))
+    if(gcontrols.intensity === 0.1 && (gcontrols.bpm === 60 && time > 930))
         stop();
 
     if(setTimeoutControl)
         if(lock)
-    	   setTimeout(HitOnce, (60/gcontrols.bpm*1000)/2, temp);
-        else
+    	   setTimeout(HitOnce, (60/gcontrols.bpm*1000)/2, 1);
+        else{
            setTimeout(HitOnce, (60/gcontrols.bpm*1000)/2);
+           this.tempii =false;
+        }
     lock = false;
 }
+
 
 function IntensityUPDown(controls){
     if(controls === 1){
