@@ -22,30 +22,33 @@ body {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js"></script>
 <script src="https://dl.dropboxusercontent.com/u/3587259/Code/Threejs/OrbitControls.js"></script>
-<script src="https://pkin159.github.io/project/DrumKitGeometry.js"></script>
 <script src='https://jyunming-chen.github.io/WebAudio/js/shared.js'></script>
 <script src="https://pkin159.github.io/project/js/dat.gui.min.js"></script>
 <script src="scoreNoLR.js"></script>
+<script src="DrumKitGeometry-S.js"></script>
 <script src="normallr.js"></script>
 <script>
 
-var frameStart, frameEnd;
+//////////////////////////////
 
+var score = normalLR(scroll);
+
+//////////////////////////////
+
+var frameStart, frameEnd;
 var intensity = 0.5;
 var instrument = "s";
 var bpm = 100;
 var sounds;
 
-gcontrols = {
-  		intensity: 0.1,
-  		bpm: 100.,
-  	};
-
-  	var gui = new dat.GUI();
-  	gui.domElement.id = 'gui';
-  	gui.add(gcontrols, 'intensity',0.1, 1).step(0.01);
-  	gui.add(gcontrols, 'bpm', 60, 500).step(0.1);
-
+var SoundSample = function(){
+        loadSounds(this, {
+        bass: 'https://jennyhyc.github.io/project/sounds/drum/bass.mp3',
+        snare: 'https://jennyhyc.github.io/project/sounds/drum/snare.mp3',
+        hihat: 'https://jennyhyc.github.io/project/sounds/drum/hatOp.mp3',
+        stick: 'https://jennyhyc.github.io/project/sounds/drum/stick.mp3'
+    });
+}
 
 var Stick = function () {
     // properties
@@ -54,16 +57,13 @@ var Stick = function () {
         timeS: 0,
         value: 0
     }, {
-        timeS: 0.25,
+        timeS: 0.5,
         value: 0.2//3.14 / 4
     }, {
-        timeS: 0.3,
+        timeS: 0.6,
         value: -.2
     },
        {
-        timeS: 0.5,
-        value: 0
-    },{
         timeS: 1,
         value: 0
     }
@@ -76,29 +76,17 @@ var Stick = function () {
     this.startTime = 0;
     this.angle = 0; // for 'text-based' rendering
     this.instrument = 's';
-    this.soundintensity = 1;
     this.color = new THREE.Color(1,0,0);
     this.group = newMesh(this.color);
     this.object = new THREE.Object3D();
     this.object.add(this.group);
-    loadSounds(this, {
-        kick: 'https://jennyhyc.github.io/project/sounds/drum/bass.mp3',
-        snare: 'https://jennyhyc.github.io/project/sounds/drum/snare.mp3',
-        hihat: 'https://jennyhyc.github.io/project/sounds/drum/hatOp.mp3',
-        stick: 'https://jennyhyc.github.io/project/sounds/drum/stick.mp3'
-    });
+
     // methods
     this.setT = function (period) {
         this.T = period;
     }
     this.setMaxKeysValue = function (intensity){
         this.keys[1].value = intensity;
-    }
-    this.setSoundIntensity = function(intensity){
-    	this.soundintensity = intensity;
-    }
-    this.setInstrument = function(ins){
-    	this.instrument = ins;
     }
 
     this.interpolate = function (s) { // normalized time
@@ -122,87 +110,27 @@ var Stick = function () {
         this.group.rotation.x = this.angle;
         
         var quat = new THREE.Quaternion();
-   		
-        //console.log(this.tt);
-         
-        if(this.tt > 1){     
-        	this.tt = 1;
-        
-        	THREE.Quaternion.slerp(this.frame1.quaternion, this.frame2.quaternion, quat , this.tt);
-        
-        this.object.quaternion.copy (quat);
-        	//this.frame1.quaternion.copy(this.frame2.quaternion);
-        } 
-        
+
         var pos = this.frame1.position.lerp(this.frame2.position, s);
         this.group.position.set(pos.x, pos.y, pos.z);
-        //console.log("group pos", this.group.position);
-        //console.log('quaternion frame1', this.frame1.quaternion);
-        //console.log('quaternion frame2', this.frame2.quaternion);
 
-        if(this.angle < (-.2+.05+(60/this.T)/1000)){
-        	if(!this.soundAlready()){
-        		this.soundAlready(1);
-        		switch (this.instrument){
-        			case 's':
-        				this.playSound(this.snare, 0, this.soundintensity);
-        				break;
-        			case 'st':
-        				this.playSound(this.stick, 0, this.soundintensity);
-        				break;
-    				case 'b':
-    					this.playSound(this.kick, 0, this.soundintensity);
-    					breakl
-    				case 'h':
-    					this.playSound(this.hihat, 0, this.soundintensity);
-    					break;
-        		}
-        		
-        	}
-        }
+        if(this.tt > 1){     
+            this.tt = 1;
+        
+            THREE.Quaternion.slerp(this.frame1.quaternion, this.frame2.quaternion, quat , this.tt);
+        
+            this.object.quaternion.copy (quat);
+        } 
+        
 
     }
 
     this.startOneCycle = function () {
         this.startTime = clock.getElapsedTime();
-        var i = this.soundAlready(0,1); // not used ....
     }
-    this.playSound = function(buffer,time,intensity){
-
-	    var gainNode = context.createGain();
-	    var source = context.createBufferSource();
-	    source.buffer = buffer;
-
-	    // Connect source to a gain node
-	    source.connect(gainNode);
-	    // Connect gain node to destination
-	    gainNode.connect(context.destination);
-
-	    var gainval = intensity || 0.5;
-	    gainNode.gain.value = gainval;
-
-	    source[source.start ? 'start' : 'noteOn'](time);
-
-	}
-	this.soundAlready = function(lock,reset){
-		var l = lock || 0;
-		this.check = this.check || 0;
-		var rs = reset || 0;
-
-		if(rs == 1){
-			this.check = 0;
-			return -1;
-		}
-		if(this.check == 0 && l == 0){
-			this.check = 1;
-			return 0;
-		}
-		else
-			return 1;
-		
-	}
+   
 }
-function newMesh(c){
+function newMesh(){
     a = new THREE.Object3D();
  
     var geometry = new THREE.CylinderGeometry(1.4, 1.4, 70, 32);
@@ -213,23 +141,26 @@ function newMesh(c){
 
     cylinder.rotation.x = Math.PI / 2;
     cylinder.position.set(0, 0, -40);
+    cylinder.castShadow = true; cylinder.receiveShadow = true;
 
     var geometry1 = new THREE.CylinderGeometry(1.4, 0.8, 20, 32);
     var cylinder2 = new THREE.Mesh(geometry1, material);
 
     cylinder2.rotation.x = Math.PI / 2;
     cylinder2.position.set(0, 0, -85);
+    cylinder2.castShadow = true; cylinder2.receiveShadow = true;
 
     var geometry3 = new THREE.SphereGeometry(1.5, 32, 32);
     var sphere = new THREE.Mesh(geometry3, material);
     sphere.position.set(0, 0, -95);
+    sphere.castShadow = true; sphere.receiveShadow = true;
 
     a.add(cylinder);
     a.add(cylinder2);
     a.add(sphere);
 
     return a;
-    }
+}
 
 var camera, scene, renderer, frame, frame1, frame2, light, controls;
 ////////init
@@ -241,15 +172,55 @@ var stick2 = new Stick();
 //////play & stop
 var play, CheckF, Check;
 var count = 0;
+var soundsample = new SoundSample();
 
 var poschair = new THREE.Vector3(0, 10, 0);
 var posbass = new THREE.Vector3(15,75,-185);
 var poshihat = new THREE.Vector3( -150, 120, -150);
-var snare = new THREE.Object3D();
-snare = Snare( -75,110, -90);
+var possnare = new THREE.Vector3( -75,110, -90);
+var postomL = new THREE.Vector3(5, 170, -195);
+var postomR = new THREE.Vector3(25, 170, -195);
 
-var chairframeR, hihatframeR, snareframeR;
-var chairframeL, hihatframeL, snareframeL;
+
+
+var chair = new Chair();
+var bass = new Bass();
+var hihat = new Hihat();
+var snare = new Snare();
+var tomL = new Tom(new THREE.Euler(Math.PI/8, Math.PI/4, 0, 'XYZ'));
+var tomR = new Tom(new THREE.Euler(Math.PI/8, Math.PI*3/4, 0, 'XYZ'));
+
+var chairframeR, hihatframeR, snareframeR, tomRframe;
+var chairframeL, hihatframeL, snareframeL, tomLframe;
+
+function setFrame(){
+    chairframeR = new THREE.Object3D();
+    chairframeR.position.set ( poschair.x+15, poschair.y+110, poschair.z );
+    chairframeR.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), 0);
+    snareframeR = new THREE.Object3D();
+    snareframeR.position.set (poschair.x+15, 110+30, poschair.z-10) ;
+    snareframeR.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI/4);
+    standbyframeR = new THREE.Object3D();
+    standbyframeR.position.set ( poschair.x, poschair.y+130, poschair.z+30);
+    standbyframeR.quaternion.setFromEuler(new THREE.Euler(Math.PI/12, Math.PI/4, 0, 'YZX'));
+    hihatframeR = new THREE.Object3D();
+    hihatframeR.position.set ( 20, 115, -160);
+    hihatframeR.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, Math.PI/4, 0, 'YZX'));
+
+    chairframeL = new THREE.Object3D();
+    chairframeL.position.set ( poschair.x-15, poschair.y+110, poschair.z);
+    chairframeL.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), 0);
+    snareframeL = new THREE.Object3D();
+    snareframeL.position.set (poschair.x-25, 110+30, poschair.z-10) ; 
+    snareframeL.quaternion.setFromAxisAngle(new THREE.Vector3(0,1,0), Math.PI/6);
+    standbyframeL = new THREE.Object3D();
+    standbyframeL.position.set ( poschair.x, poschair.y+115, poschair.z+30);
+    standbyframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/12, -Math.PI/4, 0, 'YZX'));
+    hihatframeL = new THREE.Object3D();
+    hihatframeL.position.set ( -80, 120, -150);
+    hihatframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, Math.PI/8, 0, 'YZX'));    
+}
+
 
 init();
 animate();
@@ -257,7 +228,7 @@ animate();
 function init() {
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.z = 500;
     scene.add(camera);
 
@@ -272,28 +243,19 @@ function init() {
         transparent: true
     }));
     
+    snare.position.set(possnare.x, possnare.y, possnare.z);
+    bass.position.set(posbass.x, posbass.y, posbass.z);
+    hihat.position.set(poshihat.x, poshihat.y, poshihat.z);
+    tomL.position.set(postomL.x, postomL.y, postomL.z);
+    tomR.position.set(postomR.x, postomR.y, postomR.z);
+
     scene.add(snare);
+    scene.add(bass);
+    scene.add(hihat);
+    scene.add(tomL);
+    scene.add(tomR);
 
-    chairframeR = new THREE.Object3D();
-    chairframeR.position.set ( poschair.x+15, poschair.y+110, poschair.z );
-    chairframeR.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), 0);
-    snareframeR = new THREE.Object3D();
-    snareframeR.position.set (poschair.x+15, 110+30, poschair.z-10) ;
-    snareframeR.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI/4);
-    standbyframeR = new THREE.Object3D();
-	standbyframeR.position.set ( poschair.x, poschair.y+130, poschair.z+30 );
-    standbyframeR.quaternion.setFromEuler(new THREE.Euler(Math.PI/12, Math.PI/4, 0, 'YZX' ))
-
-    chairframeL = new THREE.Object3D();
-    chairframeL.position.set ( poschair.x-15, poschair.y+110, poschair.z );
-    chairframeL.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), 0);
-    snareframeL = new THREE.Object3D();
-    snareframeL.position.set (poschair.x-25, 110+30, poschair.z-10) ; 
-    snareframeL.quaternion.setFromAxisAngle(new THREE.Vector3(0,1,0), Math.PI/6);
-	standbyframeL = new THREE.Object3D();
-    standbyframeL.position.set ( poschair.x, poschair.y+115, poschair.z+30);
-    standbyframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/12, -Math.PI/4, 0, 'YZX' ))
-
+    setFrame();
 
     frame = new THREE.Object3D();
     scene.add(frame);
@@ -312,7 +274,7 @@ function init() {
     stick2.startOneCycle();
     frame.add(stick2.object);
   
-
+/*
     light = new THREE.PointLight(0xffffff);
     light.position.set(100, 300, 200);
     scene.add(light);
@@ -320,10 +282,34 @@ function init() {
     var gridXZ = new THREE.GridHelper(100, 10);
     gridXZ.setColors(new THREE.Color(0xff0000), new THREE.Color(0xffffff));
     scene.add(gridXZ);
+*/
+    light = new THREE.SpotLight(0xffffff, 1.5);
+    light.position.set(100, 500, 100);
+    light.angle =  Math.PI / 6;
+    light.exponent = 20;
+    light.castShadow = true;
+    light.shadowCameraNear = 200;
+    light.shadowCameraFar = camera.far;
+    light.shadowCameraFov = 50;
+    light.shadowBias = -0.00022;
+    light.shadowDarkness = 0.5;
+    light.shadowMapWidth = 2048;
+    light.shadowMapHeight = 2048;
+    scene.add(light);
+    light.target = snare; // light follows the box
+
+    var floor = new THREE.Mesh(new THREE.PlaneGeometry(800, 800, 30, 30),
+    new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('floor.jpg')}));
+    floor.rotation.x = -Math.PI / 2;
+    scene.add(floor);
+    floor.castShadow = true; floor.receiveShadow = true;
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x888888);
+    renderer.shadowMapEnabled = true;
+    //renderer.shadowMapSoft = true;
+    renderer.shadowMapType = THREE.PCFShadowMap;
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
@@ -341,9 +327,10 @@ function onWindowResize() {
 
 function animate() {
     
+    if(soundsample.snare !== undefined){
     stick1.update(clock.getElapsedTime());
     stick2.update(clock.getElapsedTime());
-
+    }
 
     controls.update();
     requestAnimationFrame(animate);
@@ -370,7 +357,7 @@ function stop(){
 	checkstop ^= 1;
 }
 
-var score = normalLR(scroll);
+//var score = normalLR(scroll);
 console.log(scroll);
 console.log(score);
 
@@ -381,7 +368,7 @@ function standby(){
 	stick1.frame2 = standbyframeR.clone();
     stick2.frame2 = standbyframeL.clone();
 	for (var i = 0; i < 4; i++) {
-        setTimeout(HitOnce, i *(60/bpm*1000)/2, 0.5, 'Right','st');
+        setTimeout(HitOnce, i *(60/bpm*1000), 0.5, 'Right','st');
     }
 
     var firstR, firstL;
@@ -397,8 +384,8 @@ function standby(){
     	console.log(firstR);
     	console.log(firstL);
     }
-    setTimeout(setFirstLR, i * (60/bpm*1000)/2, firstL, firstR);
-    setTimeout(playScore1, i * (60/bpm*1000)/2);
+    setTimeout(setFirstLR, i * (60/bpm*1000), firstL, firstR);
+    setTimeout(playScore1, i * (60/bpm*1000));
 }
 
 function setFirstLR(instrumentL, instrumentR){
@@ -407,7 +394,9 @@ function setFirstLR(instrumentL, instrumentR){
 			stick1.frame1 = snareframeR.clone();
 		    stick1.frame2 = snareframeR.clone();
 		    break;
-		case 'h':  //////////when setting position hihat frame
+		case 'h':  
+            stick1.frame1 = hihatframeR.clone();
+            stick1.frame2 = hihatframeR.clone();
 			break;
 		case 'b':  /////////when setting position bassframe
 			break;
@@ -418,11 +407,29 @@ function setFirstLR(instrumentL, instrumentR){
 		    stick2.frame2 = snareframeL.clone();
 		    break;
 		case 'h':  //////////when setting position hihat frame
+            stick1.frame1 = hihatframeL.clone();
+            stick1.frame2 = hihatframeL.clone();
 			break;
 		case 'b':  /////////when setting position bassframe
 	}
 }
 
+function playSound(buffer,time,intensity){
+
+    var gainNode = context.createGain();
+    var source = context.createBufferSource();
+    source.buffer = buffer;
+    console.log('source',source.buffer);
+    // Connect source to a gain node
+    source.connect(gainNode);
+    // Connect gain node to destination
+    gainNode.connect(context.destination);
+
+    var gainval = intensity || 0.5;
+    gainNode.gain.value = gainval;
+
+    source[source.start ? 'start' : 'noteOn'](time);
+}
 
 function HitOnce(intensity, LR, instrument) {
     var ii = intensity || (3.14/4);
@@ -433,35 +440,44 @@ function HitOnce(intensity, LR, instrument) {
     console.log(ins);
     console.log(stick1);
 
-
-        if(lr === 'Right' ){
+    if(lr === 'Right' ){
     
             if(ins ==='s')
                 stick1.frame2 = snareframeR.clone();
             if(ins ==='h')
                 stick1.frame2 = hihatframeR.clone();
-            if(ins ==='st'){
-            	stick1.frame2 = standbyframeR.clone();
-            }
-            stick1.setInstrument(ins)
-            stick1.setSoundIntensity(ii)
             stick1.setMaxKeysValue(ii);
             stick1.startOneCycle();
-        	
+            
         }
-    	if(lr === 'Left' ){
+        
+    if(lr === 'Left' ){
         
             if(ins ==='s')
                 stick2.frame2 = snareframeL.clone();
             if(ins ==='h')
                 stick2.frame2 = hihatframeL.clone();
-
-            stick2.setInstrument(ins)
-            stick2.setSoundIntensity(ii)
+            
             stick2.setMaxKeysValue(ii);
+          
             stick2.startOneCycle();
             
-        }
+    }
+    switch (ins){
+        case 's':
+            playSound(soundsample.snare, 0, ii);
+            break;
+        case 'st':
+            playSound(soundsample.stick, 0, ii);
+            break;
+        case 'b':
+            playSound(soundsample.bass, 0, ii);
+            break;
+        case 'h':
+            playSound(soundsample.hihat, 0, ii);
+            break;
+    }
+
 }
 
 function playScore1() {
@@ -469,11 +485,15 @@ function playScore1() {
         setTimeout(HitOnce, score[i].time *(60/bpm*1000)/2, score[i].intensity, score[i].LR, score[i].instrument);
 
     }
-    setTimeout(playScore1, score[score.length].time *(60/bpm*1000)/2);
+    setTimeout(playScore1, score[score.length-1].time *(60/bpm*1000)/2);
 }
+
+
+
 function render() {
     renderer.render(scene, camera);
 }
+
 </script>
 </body>
 </html>

@@ -204,9 +204,9 @@ function Snare() {
     return drum;
 
 }
-function Tom(x, y, z, euler){
+function Tom(euler){
         var drum = new THREE.Object3D();
-    var maindrum = new THREE.Object3D();
+        var maindrum = new THREE.Object3D();
 
         var extrudeSettings = {
             amount: 12,
@@ -231,14 +231,17 @@ function Tom(x, y, z, euler){
         mesh = new THREE.Mesh(geometry, material);
         mesh.rotation.x = Math.PI / 2
         mesh.position.set(0, 6, -5);
+        mesh.castShadow = true; mesh.receiveShadow = true;
 
         var topGeometry = new THREE.CircleGeometry(5, 32);
         var topMaterial = new THREE.MeshPhongMaterial({
             color: 0xffffff
         });
         var topMesh = new THREE.Mesh(topGeometry, topMaterial);
+        topMesh.castShadow = true; topMesh.receiveShadow = true;
 
         var buttonMesh = topMesh.clone();
+        buttonMesh.castShadow = true; buttonMesh.receiveShadow = true;
 
         topMesh.rotation.x = -Math.PI / 2;
         topMesh.position.y = 5.8;
@@ -269,6 +272,7 @@ function Tom(x, y, z, euler){
         });
 
         var meshButton = new THREE.Mesh(geometry, material);
+        meshButton.castShadow = true; meshButton.receiveShadow = true;
         meshButton.rotation.x = Math.PI / 2
         meshButton.position.set(0, -4.75, -5.2);
         //meshButton.position.set(0, 0, 0);
@@ -276,7 +280,7 @@ function Tom(x, y, z, euler){
       
         var meshTop = meshButton.clone();
         meshTop.position.set(0, 6.25, -5.2);
-     
+        meshTop.castShadow = true; meshTop.receiveShadow = true;
         maindrum.add(buttonMesh);
         maindrum.add(topMesh);
         maindrum.add(mesh);
@@ -289,22 +293,25 @@ function Tom(x, y, z, euler){
         var standgeometry = new THREE.CylinderGeometry(2.5, 2.5, 60, 64);
         var standmaterial = new THREE.MeshPhongMaterial({color:0xffffff});
         var standmesh = new THREE.Mesh(standgeometry, standmaterial);
-
+        standmesh.castShadow = true; standmesh.receiveShadow = true;
         stand.add(standmesh);
 
     var axis = new THREE.Object3D();
         var axisgeometry = new THREE.SphereGeometry (5, 64, 64);
         var axismaterial = new THREE.MeshPhongMaterial({color:0x000000});
         var axismesh = new THREE.Mesh(axisgeometry, axismaterial);
+        axismesh.castShadow = true; axismesh.receiveShadow = true;
 
         var connectgeometry = new THREE.BoxGeometry(3, 10, 8);
         var connectmaterial = new THREE.MeshPhongMaterial({color:0xffffff});
         var connectmesh = new THREE.Mesh(connectgeometry, connectmaterial);
+        connectmesh.castShadow = true; connectmesh.receiveShadow = true;
         connectmesh.position.set(-15, 0, 0);
 
         var bridgegeometry = new THREE.CylinderGeometry(2, 2, 15, 64);
         var bridgematerial = new THREE.MeshPhongMaterial({color:0xffffff});
         var bridgemesh = new THREE.Mesh(bridgegeometry, bridgematerial);
+        bridgemesh.castShadow = true; bridgemesh.receiveShadow = true;
         bridgemesh.rotation.z = Math.PI/2;
         bridgemesh.position.set(-7.5, 0, 0);
 
@@ -319,7 +326,7 @@ function Tom(x, y, z, euler){
 
     drum.add(axis);
     drum.add(stand);
-    drum.position.set(x, y, z);
+    //drum.position.set(x, y, z);
     
     //drum.rotation.x = Math.PI;
 
@@ -327,7 +334,7 @@ function Tom(x, y, z, euler){
 
 }
 
-function Bass(x, y, z) {
+function Bass() {
     
     var bass  = new THREE.Object3D();
 
@@ -453,13 +460,13 @@ function Bass(x, y, z) {
     bass.add(standL);
     bass.add(connectmeshR);
     bass.add(connectmeshL);
-    bass.position.set(x, y, z);
+    //bass.position.set(x, y, z);
     
     return bass;
 
 }
 
-function Hihat(x, y, z){
+function Hihat(){
     var hithat = new THREE.Object3D();
     
 	var hithattop = new THREE.Object3D();
@@ -548,13 +555,13 @@ function Hihat(x, y, z){
     hithat.add(standsup3mesh);
     hithat.add(lockbut2mesh);
     
-    hithat.position.set ( x, y, z );
+    ///hithat.position.set ( x, y, z );
     
     return hithat;
     
 }
 
-function Chair(x, y, z){
+function Chair(){
     
     var chair = new THREE.Object3D();
     
@@ -578,7 +585,7 @@ function Chair(x, y, z){
     chair.add(sitmesh);
     chair.add(standbuttonmesh);
     chair.add(standmesh);
-    chair.position.set( x, y, z );
+    //chair.position.set( x, y, z );
     return chair;
 }
 
