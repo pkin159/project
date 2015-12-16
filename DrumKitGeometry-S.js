@@ -360,6 +360,7 @@ function Bass() {
         });
 
         mesh = new THREE.Mesh(geometry, material);
+        mesh.castShadow = true; mesh.receiveShadow = true;
         mesh.rotation.x = Math.PI / 2
         mesh.position.set(0, 6, -5);
 
@@ -368,7 +369,7 @@ function Bass() {
             color: 0xffffff
         });
         var topMesh = new THREE.Mesh(topGeometry, topMaterial);
-
+        topMesh.castShadow = true; topMesh.receiveShadow = true;
         var buttonMesh = topMesh.clone();
 
         topMesh.rotation.x = -Math.PI / 2;
@@ -400,11 +401,13 @@ function Bass() {
         });
 
         var meshButton = new THREE.Mesh(geometry, material);
+        meshButton.castShadow = true; meshButton.receiveShadow = true;
         meshButton.rotation.x = Math.PI / 2
         meshButton.position.set(0, -4.75, -5.2);
     	meshButton.scale.set(1.04, 1.04 , .12);
       
         var meshTop = meshButton.clone();
+        meshTop.castShadow = true; meshTop.receiveShadow = true;
         meshTop.position.set(0, 6.25, -5.2);
         
         bassmain.add(buttonMesh);
@@ -419,6 +422,9 @@ function Bass() {
     var connectmaterial = new THREE.MeshPhongMaterial({color:0xffffff});
     var connectmeshR = new THREE.Mesh(connectgeometry, connectmaterial);
     var connectmeshL = connectmeshR.clone();
+    connectmeshR.castShadow = true; connectmeshR.receiveShadow = true;
+    connectmeshL.castShadow = true; connectmeshL.receiveShadow = true;
+
     connectmeshR.position.set(65, 10, -10);
     connectmeshR.rotation.z = Math.PI/18;
     connectmeshL.position.set(-65, 10, -10);
@@ -428,15 +434,18 @@ function Bass() {
         var standgeometry = new THREE.CylinderGeometry(2.2, 2.2, 80, 64);
         var standmaterial = new THREE.MeshPhongMaterial({color:0xffffff});
         var standRmesh = new THREE.Mesh(standgeometry, standmaterial);
+        standRmesh.castShadow = true; standRmesh.receiveShadow = true;
         standRmesh.position.set(0, -40, 0);
 
         var axisgeometry = new THREE.SphereGeometry (4, 64, 64);
         var axismaterial = new THREE.MeshPhongMaterial({color:0x000000});
         var axismesh = new THREE.Mesh(axisgeometry, axismaterial);
+        axismesh.castShadow = true; axismesh.receiveShadow = true;
 
         var footgeometry = new THREE.CylinderGeometry(2.5, 2.7, 5, 64);
         var footmaterial = new THREE.MeshPhongMaterial({color:0x000000});
         var footmesh = new THREE.Mesh(footgeometry, footmaterial);
+        footmesh.castShadow = true; footmesh.receiveShadow = true;
         footmesh.position.set(0, -81, 0);
 
         standR.add(standRmesh);
@@ -452,6 +461,7 @@ function Bass() {
     var connecttomgeometry = new THREE.BoxGeometry(40, 7, 15);
     var connecttommaterial = new THREE.MeshPhongMaterial({color:0xaaaaaa});
     var connecttommesh = new THREE.Mesh(connecttomgeometry, connecttommaterial);
+    connecttommesh.castShadow = true; connecttommesh.receiveShadow = true;
     connecttommesh.position.set(0, 65, -10);
 
     bass.add(connecttommesh);
@@ -477,10 +487,10 @@ function Hihat(){
     	color:0xffff00
     });
 	var mesh = new THREE.Mesh(geometry, material);
-    
+    mesh.castShadow = true; mesh.receiveShadow = true;
     var geometrytop = new THREE.CylinderGeometry( 2, 10, 3, 128);
     var meshtop = new THREE.Mesh( geometrytop, material);
-       
+    meshtop.castShadow = true; meshtop.receiveShadow = true;
     meshtop.position.y = 3;
     console.log(geometry.openEnded);
     
@@ -499,7 +509,7 @@ function Hihat(){
     	color:0xffffff
     })
     var middlemesh = new THREE.Mesh( middlegeometry, middlematerial);
-    
+    middlemesh.castShadow = true; middlemesh.receiveShadow = true;
     middlemesh.position.set ( 0, 55, 0);
     
     var standtopgeometry = new THREE.CylinderGeometry( 1.7, 1.7, 30, 32);
@@ -507,6 +517,7 @@ function Hihat(){
     	color:0xffffff
     })
     var standtopmesh = new THREE.Mesh( standtopgeometry, standmaterial);
+    standtopmesh.castShadow = true; standtopmesh.receiveShadow = true;
     standtopmesh.position.set ( 0, 70, 0);
     
     var locktopgeometry = new THREE.CylinderGeometry( 3, 3, 4, 32);
@@ -514,30 +525,36 @@ function Hihat(){
     	color:0x000000
     });
     var locktopmesh = new THREE.Mesh(locktopgeometry, lockmaterial);
+    locktopmesh.castShadow = true; locktopmesh.receiveShadow = true;
     locktopmesh.position.set (0, 65, 0);
     ////////////////////////////////////////////////////////////////////////
     ///button
     var standbutgeometry = new THREE.CylinderGeometry( 2.3, 2.3, 160, 32);
     var standbutmesh = new THREE.Mesh( standbutgeometry, standmaterial);
+    standbutmesh.castShadow = true; standbutmesh.receiveShadow = true;
     standbutmesh.position.set ( 0, -30, 0);
     
     var lockbutgeometry = new THREE.CylinderGeometry( 4, 4, 4, 32);
     var lockbutmesh = new THREE.Mesh(lockbutgeometry, lockmaterial);
+    lockbutmesh.castShadow = true; lockbutmesh.receiveShadow = true;
     lockbutmesh.position.set (0, 45, 0);
     
     var lockbut2geometry = new THREE.CylinderGeometry( 5, 5, 8, 32);
     var lockbut2mesh = new THREE.Mesh(lockbut2geometry, lockmaterial);
+    lockbut2mesh.castShadow = true; lockbut2mesh.receiveShadow = true;
     lockbut2mesh.position.set (0, -60, 0);
     
     var standsupgeometry = new THREE.CylinderGeometry( 2.7, 2.7, 80, 32);
     var standsup1mesh = new THREE.Mesh(standsupgeometry, standmaterial);
+    standsup1mesh.castShadow = true; standsup1mesh.receiveShadow = true;
     var standsup2mesh = standsup1mesh.clone();
-    
+    standsup2mesh.castShadow = true; standsup2mesh.receiveShadow = true;
     standsup1mesh.position.set( 0, -90, 28);
     standsup1mesh.rotation.x = -0.7;
 	standsup2mesh.position.set( 22.5, -90, -17); 
     standsup2mesh.rotation.z = 0.7;
     var standsup3mesh = standsup2mesh.clone();
+    standsup3mesh.castShadow = true; standsup3mesh.receiveShadow = true;
     standsup2mesh.rotation.y = 0.7;
     standsup3mesh.position.set( -23.5, -90, -17);
     standsup3mesh.rotation.y = 2.5;
@@ -571,12 +588,15 @@ function Chair(){
     	color: 0x000000
     });
     var standmesh = new THREE.Mesh(standgeometry, standmaterial);
+    standmesh.castShadow = true; standmesh.receiveShadow = true;
     var standbuttongeometry = new THREE.CylinderGeometry( 8, 60, 15, 32 );
     var standbuttonmesh = new THREE.Mesh(standbuttongeometry, standmaterial);
-    
+    standbuttonmesh.castShadow = true; standbuttonmesh.receiveShadow = true;
+
     var sitgeometry = new THREE.CylinderGeometry( 45, 45, 20, 32);
     var sitmesh = new THREE.Mesh(sitgeometry, standmaterial);
-    
+    sitmesh.castShadow = true; sitmesh.receiveShadow = true;
+
     standbuttonmesh.position.set(0, 0, 0);
     standmesh.position.set(0, 45, 0);
     sitmesh.position.set(0, 85, 0);
@@ -595,19 +615,23 @@ function BassStep(){
     var bottongeometry = new THREE.BoxGeometry( 35, 3, 80 );
     var bottonmaterial = new THREE.MeshPhongMaterial( {color: 0x000000} );
     var botton = new THREE.Mesh( bottongeometry, bottonmaterial );
+    botton.castShadow = true; botton.receiveShadow = true;
 
     var stepbodygeometry = new THREE.BoxGeometry(20, 3, 60);
     var stepbodymaterial = new THREE.MeshPhongMaterial({color:0x888888});
     var stepbody = new THREE.Mesh(stepbodygeometry,stepbodymaterial);
+    stepbody.castShadow = true; stepbody.receiveShadow = true;
     stepbody.position.set(0, 0, 32);
 
     var connectstepgeometry = new THREE.CylinderGeometry(3, 3, 20, 64);
     var connectstepmaterial = new THREE.MeshPhongMaterial({color:0x555555});
     var connectstep = new THREE.Mesh(connectstepgeometry,connectstepmaterial);
+    connectstep.castShadow = true; connectstep.receiveShadow = true;
     connectstep.rotation.z = Math.PI/2;
 
     var stepbassgeometry = new THREE.BoxGeometry(20,3,18);
     var stepbass = new THREE.Mesh(stepbassgeometry,stepbodymaterial);
+    stepbass.castShadow = true; stepbass.receiveShadow = true;
     stepbass.position.set(0, 3, -30);
     
     ///////////////////////Steptrun
@@ -620,6 +644,7 @@ function BassStep(){
     var standRgeometry = new THREE.CylinderGeometry(2, 2.5, 50, 64);
     var standRmaterail = new THREE.MeshPhongMaterial({color:0xAAAAAA});
     var standR = new THREE.Mesh(standRgeometry, standRmaterail);
+    standR.castShadow = true; standR.receiveShadow = true;
     standR.position.set(15, 25, 35);
 
     var standL = standR.clone();
@@ -628,6 +653,7 @@ function BassStep(){
     var lockgeometry = new THREE.CylinderGeometry(3, 3, 4.5, 64);
     var lockmaterial = new THREE.MeshPhongMaterial({color:0x000000});
     var lockR = new THREE.Mesh(lockgeometry, lockmaterial);
+    lockR.castShadow = true; lockR.receiveShadow = true;
     lockR.position.set(15, 48, 35);
     lockR.rotation.z = Math.PI/2;
 
@@ -638,6 +664,7 @@ function BassStep(){
     var bridgegeometry = new THREE.CylinderGeometry(1, 1, 30, 64);
     var bridgematerail = new THREE.MeshPhongMaterial({color:0xffffff});
     var bridge = new THREE.Mesh(bridgegeometry, bridgematerail);
+    bridge.castShadow = true; bridge.receiveShadow = true;
     bridge.position.set(0, 48, 35);
     bridge.rotation.z = Math.PI/2;
 
@@ -646,29 +673,34 @@ function BassStep(){
     var axisgeometry = new THREE.CylinderGeometry(3, 3, 5, 64);
     var axismaterial = new THREE.MeshPhongMaterial({color:0xaaaaaa});
     var axis = new THREE.Mesh(axisgeometry, axismaterial);
+    axis.castShadow = true; axis.receiveShadow = true;
     axis.rotation.z = Math.PI/2;
 
     var connectstickgeometry = new THREE.BoxGeometry(3, 5, 4);
     var connectstickmaterail = new THREE.MeshPhongMaterial({color:0xffffff});
     var connectstick = new THREE.Mesh(connectstickgeometry, connectstickmaterail);
+    connectstick.castShadow = true; connectstick.receiveShadow = true;
     connectstick.position.set(-1.5, 2, 2);
     hittrun.add(connectstick);
 
     var stickgeometry = new THREE.CylinderGeometry(1, 1, 30, 64);
     var stickmaterail = new THREE.MeshPhongMaterial({color:0xffffff});
     var stick = new THREE.Mesh(stickgeometry, stickmaterail);
+    stick.castShadow = true; stick.receiveShadow = true;
     stick.position.set(-1.5, 15, 2);   
     hittrun.add(stick);
 
     var headboxgeometry = new THREE.BoxGeometry(4, 6.5, 5);
     var headboxmaterail = new THREE.MeshPhongMaterial({color:0x000000});
     var headbox = new THREE.Mesh(headboxgeometry, headboxmaterail);
+    headbox.castShadow = true; headbox.receiveShadow = true;
     headbox.position.set(-1.5, 33, 2);
     hittrun.add(headbox);
 
     var headbox2geometry = new THREE.CylinderGeometry(4, 4, 3, 64);
     var headbox2materail = new THREE.MeshPhongMaterial({color:0x000000});
     var headbox2 = new THREE.Mesh(headbox2geometry, headbox2materail);
+    headbox2.castShadow = true; headbox2.receiveShadow = true;
     headbox2.position.set(-1.5, 33, 4); 
     headbox2.rotation.x = Math.PI/2;
     hittrun.add(headbox2);
@@ -676,6 +708,7 @@ function BassStep(){
     var headgeometry = new THREE.CylinderGeometry(4, 4, 1, 64);
     var headmaterail = new THREE.MeshPhongMaterial({color:0xffffff});
     var head = new THREE.Mesh(headgeometry, headmaterail);
+    head.castShadow = true; head.receiveShadow = true;
     head.position.set(-1.5, 33, 6); 
     head.rotation.x = Math.PI/2;
     hittrun.add(head);

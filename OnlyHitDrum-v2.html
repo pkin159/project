@@ -8,6 +8,13 @@
     text-align: center;
     color: #ffff00
 }
+#control {
+  position: absolute;
+  top: 0px;
+  padding: 10px;
+  text-align: center;
+  color: #00ff00
+}
 body {
     overflow: hidden;
 }
@@ -15,7 +22,7 @@ body {
 </head>
 
 <body>
-<div>
+<div id = "control">
     <button id='play' class='buttonclass'>Play</button>
     <button id='stop' class='buttonclass'>Stop</button>
     <button id='accent' class='buttonclass'>Accent</button>
@@ -26,7 +33,7 @@ body {
 <script src='https://jyunming-chen.github.io/WebAudio/js/shared.js'></script>
 <script src="https://pkin159.github.io/project/js/dat.gui.min.js"></script>
 <script src="https://pkin159.github.io/project/js/KeyboardState.js"></script>
-<script src="js/jquery-2.1.4.min.js"></script>
+<script src="project/js/jquery-2.1.4.min.js"></script>
 <script src="DrumKitGeometry-S.js"></script>
 <script>
 
@@ -34,12 +41,12 @@ var frameStart, frameEnd;
 
 var intensity = 0.3;
 var instrument = "s";
-
+var bpm = 220;
 gcontrols = {
-  		intensity: 0.2,
-  		bpm: 160.,
-  		LR: true
-  	};
+        intensity: 0.2,
+        bpm: 220.,
+        LR: true
+    };
 /*
   	var gui = new dat.GUI();
   	gui.domElement.id = 'gui';
@@ -178,7 +185,6 @@ var stick2 = new Stick();
 //////play & stop
 var play, CheckF, Check;
 var count = 0;
-var bpm = 120;
 var gcontrols;
 
 var soundsample = new SoundSample();
@@ -201,7 +207,8 @@ function init() {
     scene = new THREE.Scene();
 
     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
-    camera.position.z = 500;
+    camera.position.y = 300;
+    camera.position.z = -550;
     scene.add(camera);
 
     var geometry = new THREE.BoxGeometry(40, 20, 20);
@@ -289,8 +296,6 @@ function init() {
     renderer.shadowMapType = THREE.PCFShadowMap;
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
 }
@@ -308,8 +313,6 @@ function animate() {
     stick1.update(clock.getElapsedTime());
     stick2.update(clock.getElapsedTime());
     }
-    stick1.setT(60/gcontrols.bpm);
-    stick2.setT(60/gcontrols.bpm);
 
     controls.update();
     requestAnimationFrame(animate);
@@ -425,7 +428,7 @@ function HitOnce(intensity) {
             break;
         case 'b':
             this.playSound(soundsample.bass, 0, ii);
-            breakl
+            break;
         case 'h':
             this.playSound(soundsample.hihat, 0, ii);
             break;
