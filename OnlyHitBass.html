@@ -1,0 +1,366 @@
+<html>
+<head>
+<style>#info {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    color: #ffff00
+}
+body {
+    overflow: hidden;
+}
+</style>
+</head>
+
+<body>
+<div id  = info><a href = "javascript:play();">play </a><br>
+               
+    </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js"></script>
+<script src="https://dl.dropboxusercontent.com/u/3587259/Code/Threejs/OrbitControls.js"></script>
+<script src="https://pkin159.github.io/project/drumsetting.js"></script>
+<script src='https://jyunming-chen.github.io/WebAudio/js/shared.js'></script>
+<script src="https://pkin159.github.io/project/js/dat.gui.min.js"></script>
+
+<script>
+
+
+var frameStart, frameEnd;
+
+
+var BassStep = function () {
+    // properties
+    this.T = 4; // in seconds
+    this.stepkeys = [{   /////////will be change
+        timeS: 0,
+        value: -0.52
+    },{
+        timeS: 0.25,
+        value: 0//3.14 / 4
+    },{
+        timeS: 0.5,
+        value: -0.52
+    },{
+        timeS: 1,
+        value: -0.52
+    }
+                ];
+    this.headkeys = [{   /////////will be change
+        timeS: 0,
+        value: -0.52
+    },{
+        timeS: 0.25,
+        value: 0.5//3.14 / 4
+    },{
+        timeS: 0.5,
+        value: -0.52
+    },{
+        timeS: 1,
+        value: -0.52
+    }
+                ];
+    this.startTime = 0;
+    this.angleS = 0;
+    this.angleH = 0; // for 'text-based' rendering
+    this.soundintensity = 1;
+    this.group = newMesh();
+    loadSounds(this, {
+        kick: 'https://jennyhyc.github.io/project/sounds/drum/bass.mp3'
+    });
+    console.log('loadSounds');
+    // methods
+    this.setT = function (period) {
+        this.T = period;
+    }
+    this.setSoundIntensity = function(intensity){
+        this.soundintensity = intensity;
+    }
+    this.interpolate = function (s, keys) { // normalized time
+        var tempkeys = keys;
+        if (s > 1) // end of cycle
+        return tempkeys[tempkeys.length - 1].value;
+
+        for (var i = 1; i < tempkeys.length; i++) {
+            if (s < tempkeys[i].timeS) break;
+        }
+
+        var vv = tempkeys[i - 1].value + (s - tempkeys[i - 1].timeS) / (tempkeys[i].timeS - tempkeys[i - 1].timeS) * (tempkeys[i].value - tempkeys[i - 1].value);
+        return vv;
+    };
+
+    this.update = function (time) { // time: elapsedTime
+        var s = (time - this.startTime) / this.T;
+
+        this.angleS = this.interpolate(s, this.stepkeys);
+        this.angleH = this.interpolate(s, this.headkeys);
+        this.group[1].rotation.x = this.angleS;
+        this.group[2].rotation.x = this.angleH;
+
+        if(this.angleH < (.5-0.05-(60/this.T)/1000)){
+            if(!this.soundAlready()){
+                this.soundAlready(1);
+                        //console.log('sound of kick', this.kick);
+                       //this.playSound(this.kick, 0, this.soundintensity);
+          
+                }
+                
+            }
+    }
+
+    this.startOneCycle = function () {
+        this.startTime = clock.getElapsedTime();
+        var i = this.soundAlready(0,1); // not used ....
+    }
+    this.playSound = function(buffer,time,intensity){
+
+        var gainNode = context.createGain();
+        var source = context.createBufferSource();
+        console.log('buffer' , buffer);
+        console.log('source' ,  source.buffer);
+        source.buffer = buffer;
+        
+        // Connect source to a gain node
+        source.connect(gainNode);
+        // Connect gain node to destination
+        gainNode.connect(context.destination);
+
+        var gainval = intensity || 0.5;
+        gainNode.gain.value = gainval;
+
+        source[source.start ? 'start' : 'noteOn'](time);
+
+    }
+    this.soundAlready = function(lock,reset){
+        var l = lock || 0;
+        this.check = this.check || 0;
+        var rs = reset || 0;
+
+        if(rs == 1){
+            this.check = 0;
+            return -1;
+        }
+        if(this.check == 0 && l == 0){
+            this.check = 1;
+            return 0;
+        }
+        else
+            return 1;
+        
+    }
+}
+function newMesh(){
+    a = new THREE.Object3D();
+    
+    var bottongeometry = new THREE.BoxGeometry( 35, 3, 80 );
+    var bottonmaterial = new THREE.MeshPhongMaterial( {color: 0x000000} );
+    var botton = new THREE.Mesh( bottongeometry, bottonmaterial );
+
+    var stepbodygeometry = new THREE.BoxGeometry(20, 3, 60);
+    var stepbodymaterial = new THREE.MeshPhongMaterial({color:0x888888});
+    var stepbody = new THREE.Mesh(stepbodygeometry,stepbodymaterial);
+    stepbody.position.set(0, 0, 32);
+
+    var connectstepgeometry = new THREE.CylinderGeometry(3, 3, 20, 64);
+    var connectstepmaterial = new THREE.MeshPhongMaterial({color:0x555555});
+    var connectstep = new THREE.Mesh(connectstepgeometry,connectstepmaterial);
+    connectstep.rotation.z = Math.PI/2;
+
+    var stepbassgeometry = new THREE.BoxGeometry(20,3,18);
+    var stepbass = new THREE.Mesh(stepbassgeometry,stepbodymaterial);
+    stepbass.position.set(0, 3, -30);
+    
+    ///////////////////////Steptrun
+    var steptrun = new THREE.Object3D();
+    steptrun.add(stepbody);
+    steptrun.add(connectstep);
+    steptrun.position.set(0, 3, -20);
+    steptrun.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI/6);
+
+    var standRgeometry = new THREE.CylinderGeometry(2, 2.5, 50, 64);
+    var standRmaterail = new THREE.MeshPhongMaterial({color:0xAAAAAA});
+    var standR = new THREE.Mesh(standRgeometry, standRmaterail);
+    standR.position.set(15, 25, 35);
+
+    var standL = standR.clone();
+    standL.position.set(-15, 25, 35);
+
+    var lockgeometry = new THREE.CylinderGeometry(3, 3, 4.5, 64);
+    var lockmaterial = new THREE.MeshPhongMaterial({color:0x000000});
+    var lockR = new THREE.Mesh(lockgeometry, lockmaterial);
+    lockR.position.set(15, 48, 35);
+    lockR.rotation.z = Math.PI/2;
+
+    var lockL = lockR.clone();
+    lockL.position.set(-15, 48, 35);
+    lockL.rotation.z = Math.PI/2;
+
+    var bridgegeometry = new THREE.CylinderGeometry(1, 1, 30, 64);
+    var bridgematerail = new THREE.MeshPhongMaterial({color:0xffffff});
+    var bridge = new THREE.Mesh(bridgegeometry, bridgematerail);
+    bridge.position.set(0, 48, 35);
+    bridge.rotation.z = Math.PI/2;
+
+    var hittrun = new THREE.Object3D();
+
+    var axisgeometry = new THREE.CylinderGeometry(3, 3, 5, 64);
+    var axismaterial = new THREE.MeshPhongMaterial({color:0xaaaaaa});
+    var axis = new THREE.Mesh(axisgeometry, axismaterial);
+    axis.rotation.z = Math.PI/2;
+
+    var connectstickgeometry = new THREE.BoxGeometry(3, 5, 4);
+    var connectstickmaterail = new THREE.MeshPhongMaterial({color:0xffffff});
+    var connectstick = new THREE.Mesh(connectstickgeometry, connectstickmaterail);
+    connectstick.position.set(-1.5, 2, 2);
+    hittrun.add(connectstick);
+
+    var stickgeometry = new THREE.CylinderGeometry(1, 1, 30, 64);
+    var stickmaterail = new THREE.MeshPhongMaterial({color:0xffffff});
+    var stick = new THREE.Mesh(stickgeometry, stickmaterail);
+    stick.position.set(-1.5, 15, 2);   
+    hittrun.add(stick);
+
+    var headboxgeometry = new THREE.BoxGeometry(4, 6.5, 5);
+    var headboxmaterail = new THREE.MeshPhongMaterial({color:0x000000});
+    var headbox = new THREE.Mesh(headboxgeometry, headboxmaterail);
+    headbox.position.set(-1.5, 33, 2);
+    hittrun.add(headbox);
+
+    var headbox2geometry = new THREE.CylinderGeometry(4, 4, 3, 64);
+    var headbox2materail = new THREE.MeshPhongMaterial({color:0x000000});
+    var headbox2 = new THREE.Mesh(headbox2geometry, headbox2materail);
+    headbox2.position.set(-1.5, 33, 4); 
+    headbox2.rotation.x = Math.PI/2;
+    hittrun.add(headbox2);
+
+    var headgeometry = new THREE.CylinderGeometry(4, 4, 1, 64);
+    var headmaterail = new THREE.MeshPhongMaterial({color:0xffffff});
+    var head = new THREE.Mesh(headgeometry, headmaterail);
+    head.position.set(-1.5, 33, 6); 
+    head.rotation.x = Math.PI/2;
+    hittrun.add(head);
+
+    hittrun.add(axis);
+    hittrun.position.set(0, 48, 35);
+    hittrun.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI/6);
+
+    a.add(botton);
+    a.add(steptrun);
+    a.add(stepbass);
+    a.add(standR);
+    a.add(standL);
+    a.add(lockR);
+    a.add(lockL);
+    a.add(bridge);
+    a.add(hittrun);
+
+    return [a, steptrun, hittrun];
+    }
+
+var camera, scene, renderer, frame, frame1, frame2, light, controls;
+////////init
+var gcontrols;
+var clock = new THREE.Clock();
+var bpm = 120;
+var bassstep = new BassStep();
+var posbass = new THREE.Vector3(15,75,-185);
+
+init();
+animate();
+
+
+function init() {
+    scene = new THREE.Scene();
+
+    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.z = 500;
+    scene.add(camera);
+
+    var geometry = new THREE.BoxGeometry(40, 20, 20);
+    var material = new THREE.MeshLambertMaterial({
+        color: 0x1234ff
+    });
+    var mesh = new THREE.Mesh(geometry, material);
+    var mesh0 = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({
+        color:0xffff12,
+        opacity: 0.53,
+        transparent: true
+    }));
+    
+    
+    scene.add(bassbrumSet(15,75,-185));
+    
+    
+    bassstep.setT(0.5);
+    bassstep.startOneCycle();
+    scene.add(bassstep.group[0]);
+    
+
+    frame = new THREE.Object3D();
+    scene.add(frame);
+    var axisHelper = new THREE.AxisHelper(55);
+    frame.add(axisHelper);
+    
+    light = new THREE.PointLight(0xffffff);
+    light.position.set(100, 300, 200);
+    scene.add(light);
+
+    var gridXZ = new THREE.GridHelper(100, 10);
+    gridXZ.setColors(new THREE.Color(0xff0000), new THREE.Color(0xffffff));
+    scene.add(gridXZ);
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x888888);
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+    document.body.appendChild(renderer.domElement);
+    window.addEventListener('resize', onWindowResize, false);
+}
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+///////////////
+
+
+function animate() {
+    
+    controls.update();
+    bassstep.update(clock.getElapsedTime());
+    requestAnimationFrame(animate);
+    render();
+}
+
+function play(){
+    HitOnce();
+}
+
+function HitOnce(intensity, LR, instrument) {
+    var ii = intensity || (3.14/4);
+    var lr = LR || 'Right';
+    var ins = instrument || 'b';
+    
+    if(ins === 'b' ){
+        
+            bassstep.setSoundIntensity(ii)
+            bassstep.startOneCycle();
+            
+        }
+    
+}
+
+function render() {
+    renderer.render(scene, camera);
+}
+
+
+
+
+</script>
+</body>
+</html>

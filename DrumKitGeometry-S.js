@@ -284,7 +284,7 @@ function Tom(euler){
         maindrum.add(buttonMesh);
         maindrum.add(topMesh);
         maindrum.add(mesh);
-        maindrum.scale.set(7, 5, 7);
+        maindrum.scale.set(7, 4, 7);
         maindrum.add(meshButton);
         maindrum.add(meshTop);
 
@@ -329,6 +329,163 @@ function Tom(euler){
     //drum.position.set(x, y, z);
     
     //drum.rotation.x = Math.PI;
+
+    return drum;
+
+}
+
+function FloorTom() {
+    
+    var drum = new THREE.Object3D();
+    var maindrum = new THREE.Object3D();
+
+        var extrudeSettings = {
+            amount: 12,
+            steps: 1,
+            bevelEnabled: false,
+            curveSegments: 128
+        };
+
+        var arcShape = new THREE.Shape();
+        arcShape.absarc(0, 5, 5, 0, Math.PI * 2, 0, false);
+
+        var holePath = new THREE.Path();
+        holePath.absarc(0, 5, 4.8, 0, Math.PI * 2, true);
+        arcShape.holes.push(holePath);
+
+        var geometry = new THREE.ExtrudeGeometry(arcShape, extrudeSettings);
+        /////////////////////////////////////////////////////////////////////
+        material = new THREE.MeshPhongMaterial({
+            color: 0xff1234
+        });
+
+        mesh = new THREE.Mesh(geometry, material);
+        mesh.rotation.x = Math.PI / 2
+        mesh.position.set(0, 6, -5);
+        mesh.castShadow = true; mesh.receiveShadow = true;
+
+        var topGeometry = new THREE.CircleGeometry(5, 32);
+        var topMaterial = new THREE.MeshPhongMaterial({
+            color: 0xffffff
+        });
+        var topMesh = new THREE.Mesh(topGeometry, topMaterial);
+
+        var buttonMesh = topMesh.clone();
+
+        topMesh.rotation.x = -Math.PI / 2;
+        topMesh.position.y = 5.5;
+        topMesh.castShadow = true; topMesh.receiveShadow = true;
+        buttonMesh.rotation.x = Math.PI / 2;
+        buttonMesh.position.y = -5.5;
+        buttonMesh.castShadow = true; buttonMesh.receiveShadow = true;
+        
+        //////////////////////
+        var extrudeSettingsButton = {
+            amount: 6,
+            steps: 1,
+            bevelEnabled: false,
+            curveSegments: 128
+        };
+
+        var arcShapeButton = new THREE.Shape();
+        arcShape.absarc(0, 5, 5, 0, Math.PI * 2, 0, false);
+
+        var holePathButton = new THREE.Path();
+        holePath.absarc(0, 5, 4.8, 0, Math.PI * 2, true);
+        arcShape.holes.push(holePath);
+
+        var geometryButton = new THREE.ExtrudeGeometry(arcShape, extrudeSettings);
+        /////////////////////////////////////////////////////////////////////
+        material = new THREE.MeshPhongMaterial({
+            color: 0xD7D6D9
+        });
+
+        var meshButton = new THREE.Mesh(geometry, material);
+        meshButton.rotation.x = Math.PI / 2
+        meshButton.position.set(0, -4.75, -5.2);
+        meshButton.scale.set(1.04, 1.04 , .12);
+        meshButton.castShadow = true; meshButton.receiveShadow = true;
+      
+        var meshTop = meshButton.clone();
+        meshTop.position.set(0, 6.25, -5.2);
+        meshTop.castShadow = true; meshTop.receiveShadow = true;
+
+
+
+        maindrum.add(buttonMesh);
+        maindrum.add(topMesh);
+        maindrum.add(mesh);
+        maindrum.scale.set(8.5, 6, 8.5);
+        maindrum.add(meshButton);
+        maindrum.add(meshTop);
+
+    var standtop = new THREE.Object3D();
+
+        var connectgeometry = new THREE.BoxGeometry(7, 10, 12);
+        var connectmaterial = new THREE.MeshPhongMaterial({color:0xffffff});
+        var connect1mesh = new THREE.Mesh(connectgeometry, connectmaterial);
+        var connect2mesh = new THREE.Mesh(connectgeometry, connectmaterial);
+        var connect3mesh = new THREE.Mesh(connectgeometry, connectmaterial);    
+        var connect4mesh = new THREE.Mesh(connectgeometry, connectmaterial);
+        connect1mesh.castShadow = true; connect1mesh.receiveShadow = true;
+        connect2mesh.castShadow = true; connect2mesh.receiveShadow = true;
+        connect3mesh.castShadow = true; connect3mesh.receiveShadow = true;
+
+        standtop.add(connect1mesh);
+        standtop.add(connect2mesh);
+        standtop.add(connect3mesh);
+        connect1mesh.position.set(0, 40, 40);
+        connect2mesh.position.set(35.5, 40, -20);
+        connect3mesh.position.set(-35.5, 40, -20);
+
+        connect1mesh.quaternion.setFromEuler(new THREE.Euler( Math.PI/3, 0, 0, 'XYZ'));
+        connect2mesh.quaternion.setFromEuler(new THREE.Euler( Math.PI/3, Math.PI*2/3, 0, 'YXZ'));
+        connect3mesh.quaternion.setFromEuler(new THREE.Euler( Math.PI/3, -Math.PI*2/3, 0, 'YXZ'));
+
+        var standtopgeometry = new THREE.CylinderGeometry( 1.5, 1.5, 55.5, 32);
+        var standmaterial = new THREE.MeshPhongMaterial({
+            color:0xffffff
+        })
+        var standtop1mesh = new THREE.Mesh(standtopgeometry, standmaterial);
+        var standtop2mesh = new THREE.Mesh(standtopgeometry, standmaterial);
+        var standtop3mesh = new THREE.Mesh(standtopgeometry, standmaterial);
+
+        standtop1mesh.position.set(0, 9.5, 45);
+        standtop2mesh.position.set(40, 9.5, -22);
+        standtop3mesh.position.set(-40, 9.5, -22);
+
+        standtop1mesh.castShadow = true; standtop1mesh.receiveShadow = true;
+        standtop2mesh.castShadow = true; standtop2mesh.receiveShadow = true;
+        standtop3mesh.castShadow = true; standtop3mesh.receiveShadow = true;
+
+        standtop1mesh.quaternion.setFromEuler(new THREE.Euler( 0, 0, 0, 'YXZ'));
+        standtop2mesh.quaternion.setFromEuler(new THREE.Euler( 0, Math.PI*2/3, 0, 'YXZ'));
+        standtop3mesh.quaternion.setFromEuler(new THREE.Euler( 0, -Math.PI*2/3, 0, 'YXZ'));
+   
+        standtop.add(standtop1mesh);
+        standtop.add(standtop2mesh);
+        standtop.add(standtop3mesh);
+
+        var footgeometry = new THREE.CylinderGeometry(2.5, 2.7, 5, 64);
+        var footmaterial = new THREE.MeshPhongMaterial({color:0x000000});
+        var footmesh1 = new THREE.Mesh(footgeometry, footmaterial);
+        var footmesh2 = new THREE.Mesh(footgeometry, footmaterial);
+        var footmesh3 = new THREE.Mesh(footgeometry, footmaterial);
+        footmesh1.castShadow = true; footmesh1.receiveShadow = true;
+        footmesh2.castShadow = true; footmesh2.receiveShadow = true;
+        footmesh3.castShadow = true; footmesh3.receiveShadow = true;
+        footmesh1.position.set(0, -20, 45);
+        footmesh2.position.set(40, -20, -22);
+        footmesh3.position.set(-40, -20, -22);
+
+        standtop.add(footmesh1);
+        standtop.add(footmesh2);
+        standtop.add(footmesh3);
+
+        standtop.position.set(0,-60,0);
+
+    drum.add(maindrum);
+    drum.add(standtop);
 
     return drum;
 
@@ -492,7 +649,6 @@ function Hihat(){
     var meshtop = new THREE.Mesh( geometrytop, material);
     meshtop.castShadow = true; meshtop.receiveShadow = true;
     meshtop.position.y = 3;
-    console.log(geometry.openEnded);
     
     hithattop.add(mesh);
     hithattop.add(meshtop);
@@ -578,6 +734,170 @@ function Hihat(){
     
 }
 
+function Crash(){
+    var crash = new THREE.Object3D();
+    
+    var crashtop = new THREE.Object3D();
+    
+    var geometry = new THREE.CylinderGeometry( 9, 50, 3, 128);
+    geometry.openEnded = true;
+    var material = new THREE.MeshPhongMaterial({
+        color:0xffff00
+    });
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.castShadow = true; mesh.receiveShadow = true;
+    var geometrytop = new THREE.CylinderGeometry( 2, 10, 3, 128);
+    var meshtop = new THREE.Mesh( geometrytop, material);
+    meshtop.castShadow = true; meshtop.receiveShadow = true;
+    meshtop.position.y = 3;
+    
+    crashtop.add(mesh);
+    crashtop.add(meshtop);
+    crashtop.position.set( 0, 115, 0);
+    
+    var standmaterial = new THREE.MeshPhongMaterial({
+        color:0xffffff
+    });
+    var lockmaterial = new THREE.MeshPhongMaterial({
+        color:0x000000
+    });
+    var standbutgeometry = new THREE.CylinderGeometry( 2.3, 2.3, 210, 32);
+    var standbutmesh = new THREE.Mesh( standbutgeometry, standmaterial);
+    standbutmesh.castShadow = true; standbutmesh.receiveShadow = true;
+    standbutmesh.position.set ( 0, 10, 0);
+    
+    var lockbutgeometry = new THREE.CylinderGeometry( 4, 4, 4, 32);
+    var lockbutmesh = new THREE.Mesh(lockbutgeometry, lockmaterial);
+    lockbutmesh.castShadow = true; lockbutmesh.receiveShadow = true;
+    lockbutmesh.position.set (0, 70, 0);
+    
+    var lockbut2geometry = new THREE.CylinderGeometry( 5, 5, 8, 32);
+    var lockbut2mesh = new THREE.Mesh(lockbut2geometry, lockmaterial);
+    lockbut2mesh.castShadow = true; lockbut2mesh.receiveShadow = true;
+    lockbut2mesh.position.set (0, -60, 0);
+    
+    var lockbut3geometry = new THREE.CylinderGeometry( 4, 4, 4, 32);
+    var lockbut3mesh = new THREE.Mesh(lockbut3geometry, lockmaterial);
+    lockbut3mesh.castShadow = true; lockbut2mesh.receiveShadow = true;
+    lockbut3mesh.position.set (0, 10, 0);
+
+    var lockbut4geometry = new THREE.CylinderGeometry( 3, 3, 2, 32);
+    var lockbut4mesh = new THREE.Mesh(lockbut3geometry, lockmaterial);
+    lockbut4mesh.castShadow = true; lockbut2mesh.receiveShadow = true;
+    lockbut4mesh.position.set (0, 113, 0);    
+
+    var standsupgeometry = new THREE.CylinderGeometry( 2.7, 2.7, 80, 32);
+    var standsup1mesh = new THREE.Mesh(standsupgeometry, standmaterial);
+    standsup1mesh.castShadow = true; standsup1mesh.receiveShadow = true;
+    var standsup2mesh = standsup1mesh.clone();
+    standsup2mesh.castShadow = true; standsup2mesh.receiveShadow = true;
+    standsup1mesh.position.set( 0, -90, 28);
+    standsup1mesh.rotation.x = -0.7;
+    standsup2mesh.position.set( 22.5, -90, -17); 
+    standsup2mesh.rotation.z = 0.7;
+    var standsup3mesh = standsup2mesh.clone();
+    standsup3mesh.castShadow = true; standsup3mesh.receiveShadow = true;
+    standsup2mesh.rotation.y = 0.7;
+    standsup3mesh.position.set( -23.5, -90, -17);
+    standsup3mesh.rotation.y = 2.5;
+  
+    
+    crash.add(crashtop);
+    crash.add(standbutmesh);
+    crash.add(lockbutmesh);
+    crash.add(lockbut2mesh);
+    crash.add(lockbut3mesh);
+    crash.add(lockbut4mesh);
+    crash.add(standsup1mesh);
+    crash.add(standsup2mesh);
+    crash.add(standsup3mesh);
+
+
+    return crash;    
+}
+
+function Ride(){
+    var ride = new THREE.Object3D();
+    
+    var ridetop = new THREE.Object3D();
+    
+    var geometry = new THREE.CylinderGeometry( 9, 60, 3, 128);
+    geometry.openEnded = true;
+    var material = new THREE.MeshPhongMaterial({
+        color:0xffff00
+    });
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.castShadow = true; mesh.receiveShadow = true;
+    var geometrytop = new THREE.CylinderGeometry( 2, 10, 3, 128);
+    var meshtop = new THREE.Mesh( geometrytop, material);
+    meshtop.castShadow = true; meshtop.receiveShadow = true;
+    meshtop.position.y = 3;
+    
+    ridetop.add(mesh);
+    ridetop.add(meshtop);
+    ridetop.position.set( 0, 115, 0);
+    
+    var standmaterial = new THREE.MeshPhongMaterial({
+        color:0xffffff
+    });
+    var lockmaterial = new THREE.MeshPhongMaterial({
+        color:0x000000
+    });
+    var standbutgeometry = new THREE.CylinderGeometry( 2.3, 2.3, 210, 32);
+    var standbutmesh = new THREE.Mesh( standbutgeometry, standmaterial);
+    standbutmesh.castShadow = true; standbutmesh.receiveShadow = true;
+    standbutmesh.position.set ( 0, 10, 0);
+    
+    var lockbutgeometry = new THREE.CylinderGeometry( 4, 4, 4, 32);
+    var lockbutmesh = new THREE.Mesh(lockbutgeometry, lockmaterial);
+    lockbutmesh.castShadow = true; lockbutmesh.receiveShadow = true;
+    lockbutmesh.position.set (0, 60, 0);
+    
+    var lockbut2geometry = new THREE.CylinderGeometry( 5, 5, 8, 32);
+    var lockbut2mesh = new THREE.Mesh(lockbut2geometry, lockmaterial);
+    lockbut2mesh.castShadow = true; lockbut2mesh.receiveShadow = true;
+    lockbut2mesh.position.set (0, -60, 0);
+    
+    var lockbut3geometry = new THREE.CylinderGeometry( 4, 4, 4, 32);
+    var lockbut3mesh = new THREE.Mesh(lockbut3geometry, lockmaterial);
+    lockbut3mesh.castShadow = true; lockbut2mesh.receiveShadow = true;
+    lockbut3mesh.position.set (0, 10, 0);
+
+    var lockbut4geometry = new THREE.CylinderGeometry( 3, 3, 2, 32);
+    var lockbut4mesh = new THREE.Mesh(lockbut3geometry, lockmaterial);
+    lockbut4mesh.castShadow = true; lockbut2mesh.receiveShadow = true;
+    lockbut4mesh.position.set (0, 113, 0);    
+
+    var standsupgeometry = new THREE.CylinderGeometry( 2.7, 2.7, 80, 32);
+    var standsup1mesh = new THREE.Mesh(standsupgeometry, standmaterial);
+    standsup1mesh.castShadow = true; standsup1mesh.receiveShadow = true;
+    var standsup2mesh = standsup1mesh.clone();
+    standsup2mesh.castShadow = true; standsup2mesh.receiveShadow = true;
+    standsup1mesh.position.set( 0, -90, 28);
+    standsup1mesh.rotation.x = -0.7;
+    standsup2mesh.position.set( 22.5, -90, -17); 
+    standsup2mesh.rotation.z = 0.7;
+    var standsup3mesh = standsup2mesh.clone();
+    standsup3mesh.castShadow = true; standsup3mesh.receiveShadow = true;
+    standsup2mesh.rotation.y = 0.7;
+    standsup3mesh.position.set( -23.5, -90, -17);
+    standsup3mesh.rotation.y = 2.5;
+  
+    
+    ride.add(ridetop);
+    ride.add(standbutmesh);
+    ride.add(lockbutmesh);
+    ride.add(lockbut2mesh);
+    ride.add(lockbut3mesh);
+    ride.add(lockbut4mesh);
+    ride.add(standsup1mesh);
+    ride.add(standsup2mesh);
+    ride.add(standsup3mesh);
+
+    return ride;
+
+}
+
 function Chair(){
     
     var chair = new THREE.Object3D();
@@ -609,7 +929,9 @@ function Chair(){
     return chair;
 }
 
-function BassStep(){
+
+
+function BassStepMesh(){
     a = new THREE.Object3D();
     
     var bottongeometry = new THREE.BoxGeometry( 35, 3, 80 );

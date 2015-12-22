@@ -1,4 +1,4 @@
-function drumSet(x, y, z) {
+function Snare(x, y, z) {
     
     var drum = new THREE.Object3D();
 
@@ -125,7 +125,7 @@ function drumSet(x, y, z) {
 }
 
 
-function bassbrumSet(x, y, z) {
+function Bass(x, y, z) {
     var bass = new THREE.Object3D();
     var extrudeSettings = {
         amount: 12,
@@ -209,7 +209,7 @@ function bassbrumSet(x, y, z) {
 
 }
 
-function hithatSet(x, y, z){
+function Hihat(x, y, z){
     var hithat = new THREE.Object3D();
     
 	var hithattop = new THREE.Object3D();
@@ -304,7 +304,7 @@ function hithatSet(x, y, z){
     
 }
 
-function chairSet(x, y, z){
+function Chair(x, y, z){
     
     var chair = new THREE.Object3D();
     
