@@ -15,10 +15,6 @@ body {
 </head>
 
 <body>
-<div id  = info><a href = "javascript:play();">play </a><br>
-				<a href = "javascript:reset();">reset </a><br>
-				
-	</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js"></script>
 <script src="https://dl.dropboxusercontent.com/u/3587259/Code/Threejs/OrbitControls.js"></script>
@@ -29,12 +25,25 @@ body {
 <script src="https://pkin159.github.io/project/scrolldemo.js"></script>
 <script>
 
-//var chair = new Chair(0, 10, 0);
-//var bass = new Bass(15,75,-185);//15,75,-185
-//var hihat = new Hihat( -150, 120, -150);
-//var snare = new Snare( -75,110, -90);//-75,110, -90
-//var tomL = new Tom(5, 170, -195, new THREE.Euler(Math.PI/8, Math.PI/4, 0, 'XYZ'));
-//var tomR = new Tom(25, 170, -195, new THREE.Euler(Math.PI/8, Math.PI*3/4, 0, 'XYZ'));
+var poschair = new THREE.Vector3(0, 10, 0);
+var posbass = new THREE.Vector3(15,65,-185);
+var poshihat = new THREE.Vector3( -130, 120, -100);
+var possnare = new THREE.Vector3( -75,110, -90);
+var postomL = new THREE.Vector3(5, 160, -195);
+var postomR = new THREE.Vector3(25, 160, -195);
+var poscrash = new THREE.Vector3(-100, 120, -180);
+var posride = new THREE.Vector3(130, 120, -170);
+var posfloortom = new THREE.Vector3(100,82,-100);
+
+
+var chair = new Chair();
+var bass = new Bass();
+var hihat = new Hihat();
+var hihattop = hihat.children[2].position;
+var hihatbutton = hihat.children[4].position;
+var snare = new Snare();
+var tomLw = new Tom(new THREE.Euler(Math.PI/8, Math.PI/4, 0, 'XYZ'));
+var tomHh = new Tom(new THREE.Euler(Math.PI/8, Math.PI*3/4, 0, 'XYZ'));
 var crash = new Crash();
 var ride = new Ride();
 var floortom = new FloorTom();
@@ -48,14 +57,22 @@ function init() {
     camera.position.z = 500;
     scene.add(camera);
 
-    //scene.add(tomL);
-    //scene.add(tomR);
-    //scene.add(hihat);
-    //scene.add(snare);
-    //scene.add(bass);
-    //scene.add(chair);
-    //scene.add(crash);
-    //scene.add(ride);
+    snare.position.set(possnare.x, possnare.y, possnare.z);
+    bass.position.set(posbass.x, posbass.y, posbass.z);
+    hihat.position.set(poshihat.x, poshihat.y, poshihat.z);
+    tomLw.position.set(postomL.x, postomL.y, postomL.z);
+    tomHh.position.set(postomR.x, postomR.y, postomR.z);
+    crash.position.set(poscrash.x, poscrash.y, poscrash.z);
+    ride.position.set(posride.x, posride.y, posride.z);
+    floortom.position.set(posfloortom.x, posfloortom.y, posfloortom.z); 
+    scene.add(tomLw);
+    scene.add(tomHh);
+    scene.add(hihat);
+    scene.add(snare);
+    scene.add(bass);
+    scene.add(chair);
+    scene.add(crash);
+    scene.add(ride);
     scene.add(floortom);
 
     //normal light
@@ -97,14 +114,14 @@ function init() {
     frame = new THREE.Object3D();
     scene.add(frame);
     var axisHelper = new THREE.AxisHelper(100);
-    frame.add(axisHelper);
-    /*
+    //frame.add(axisHelper);
+    
     var floor = new THREE.Mesh(new THREE.PlaneGeometry(800, 800, 30, 30),
     new THREE.MeshLambertMaterial());
     floor.rotation.x = -Math.PI / 2;
     scene.add(floor);
     floor.castShadow = true; floor.receiveShadow = true;
-*/
+
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x888888);
