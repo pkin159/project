@@ -19,6 +19,7 @@ body {
                 <a href = "javascript:play1();">playDemo1</a>
                 <a href = "javascript:play2();">playDemo2</a><br>
 				<a href = "javascript:reset();">reset </a><br>
+                <a href = "javascript:delay();">delay</a>
 	</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js"></script>
@@ -40,9 +41,20 @@ var scoreArray = normalLR(/*score!!!!!!!!!!*/);
 var frameStart, frameEnd;
 var intensity = 0.5;
 var instrument = "s";
-var bpm = 120;
+//var bpm = 160;
 var sounds;
 
+var gcontrols = {
+        intensity: 0.2,
+        bpm: 160.,
+        LR: true
+    };
+
+    var gui = new dat.GUI();
+    gui.domElement.id = 'gui';
+    //gui.add(gcontrols, 'intensity',-.2, 1).step(0.01);
+    gui.add(gcontrols, 'bpm', 30, 240).step(0.1);
+    //gui.add(gcontrols, 'LR');
 
 
 var SoundSample = function(){
@@ -104,11 +116,12 @@ var Stick = function () {
     this.interpolate = function (s) { // normalized time
         if (s > 1) // end of cycle
         return this.keys[this.keys.length - 1].value;
-
+        console.log(clock.getElapsedTime());
         for (var i = 1; i < this.keys.length; i++) {
             if (s < this.keys[i].timeS) break;
         }
-
+        if(s>0.38)
+            console.log('hit',clock.getElapsedTime());
         var vv = this.keys[i - 1].value + (s - this.keys[i - 1].timeS) / (this.keys[i].timeS - this.keys[i - 1].timeS) * (this.keys[i].value - this.keys[i - 1].value);
         return vv;
     };
@@ -505,7 +518,7 @@ function play1(){
 	
 	if(check){
 		setTimeoutControl = 1;
-        bpm = 120;
+        //bpm = 40;
 		standby(1);
 		check = 0;
 	}
@@ -515,7 +528,7 @@ function play2(){
     
     if(check){
         setTimeoutControl = 1;
-        bpm = 150;
+        //bpm = 40;
         standby(2);
         check = 0;
     }
@@ -531,7 +544,11 @@ function stop(){
 	checkstop ^= 1;
     Stoptimeout();
 }
-
+var del = false;
+function delay(){
+    del^=true;
+    console.log(del);
+}
 
 
 function standby(scoreNum){
@@ -542,23 +559,26 @@ function standby(scoreNum){
 	stick1.frame2 = standbyframeR.clone();
     stick2.frame2 = standbyframeL.clone();
 	for (var i = 0; i < 4; i++) {
-        var motion = setTimeout(HitOnce, i *(60/bpm*1000), 0.5, 'Right','st');
-        var sound = setTimeout(Sound, (i+0.4)* (60/bpm*1000), 'st', 0.5); //
+        var motion = setTimeout(HitOnce, i *(60/gcontrols.bpm*1000), 0.5, 'Right','st');
+        if(del)
+            var sound = setTimeout(Sound, (i+0.19)* (60/gcontrols.bpm*1000), 'st', 0.5); //
+        else
+            var sound = setTimeout(Sound, (i)* (60/gcontrols.bpm*1000), 'st', 0.5);
         timeOuts.push(motion);
         timeOuts.push(sound);
     }
     switch(scoreNum){
         case 0:
-            var startplay = setTimeout(playScore1, i * (60/bpm*1000), scoreArray);
+            var startplay = setTimeout(playScore1, i * (60/gcontrols.bpm*1000), scoreArray);
             timeOuts.push(startplay);
         case 1:
             var demo1 = normalLR(scoredemo);
-            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo1);
+            var startplay = setTimeout(playScore1, i * (60/gcontrols.bpm*1000), demo1);
             timeOuts.push(startplay);
             break;
         case 2:
             var demo2 = normalLR(scoredemo2);
-            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo2);
+            var startplay = setTimeout(playScore1, i * (60/gcontrols.bpm*1000), demo2);
             timeOuts.push(startplay);
             break;
     }
@@ -695,12 +715,15 @@ function Sound(instrument, intensity){
 function playScore1(score) {
     var sco = score || [];
     for (var i = 0; i < sco.length; i++) {
-        var timeout = setTimeout(HitOnce, sco[i].time *(60/bpm*1000)/2, sco[i].intensity, sco[i].LR, sco[i].instrument);
-        var sound = setTimeout(Sound,  (sco[i].time+0.4) *(60/bpm*1000)/2, sco[i].instrument, sco[i].intensity);
+        var timeout = setTimeout(HitOnce, sco[i].time *(60/gcontrols.bpm*1000)/2, sco[i].intensity, sco[i].LR, sco[i].instrument);
+        if(del)
+            var sound = setTimeout(Sound,  (sco[i].time+0.19) *(60/gcontrols.bpm*1000)/2, sco[i].instrument, sco[i].intensity);
+        else
+            var sound = setTimeout(Sound, (sco[i].time)*(60/gcontrols.bpm*1000)/2, sco[i].instrument, sco[i].intensity);
         timeOuts.push(timeout);
         timeOuts.push(sound);
     }
-    var nextround = setTimeout(playScore1, (sco[sco.length-1].time+1) *(60/bpm*1000)/2, sco);
+    var nextround = setTimeout(playScore1, (sco[sco.length-1].time+1) *(60/gcontrols.bpm*1000)/2, sco);
     timeOuts.push(nextround);
 }
 function Stoptimeout(){

@@ -114,10 +114,10 @@ function init() {
     frame = new THREE.Object3D();
     scene.add(frame);
     var axisHelper = new THREE.AxisHelper(100);
-    //frame.add(axisHelper);
+    frame.add(axisHelper);
     
     var floor = new THREE.Mesh(new THREE.PlaneGeometry(800, 800, 30, 30),
-    new THREE.MeshLambertMaterial());
+    new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('floor.jpg')}));
     floor.rotation.x = -Math.PI / 2;
     scene.add(floor);
     floor.castShadow = true; floor.receiveShadow = true;

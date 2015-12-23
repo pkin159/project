@@ -448,7 +448,7 @@ function init() {
     lightarray[1].target = bass;
 
     var floor = new THREE.Mesh(new THREE.PlaneGeometry(800, 800, 30, 30),
-    new THREE.MeshLambertMaterial(/*{map:THREE.ImageUtils.loadTexture('floor.jpg')}*/));
+    new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('floor.jpg')}));
     floor.rotation.x = -Math.PI / 2;
     scene.add(floor);
     floor.castShadow = true; floor.receiveShadow = true;

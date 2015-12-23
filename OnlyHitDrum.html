@@ -113,7 +113,7 @@ function init() {
     frame = new THREE.Object3D();
     scene.add(frame);
     var axisHelper = new THREE.AxisHelper(55);
-    //frame.add(axisHelper);
+    frame.add(axisHelper);
 
     stick1.frame1 = chairframeR.clone();
     stick1.frame2 = chairframeR.clone();
@@ -186,7 +186,7 @@ function init() {
     scene.add(gridXZ);
     */
     var floor = new THREE.Mesh(new THREE.PlaneGeometry(800, 800, 30, 30),
-    new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('floor.jpg')}));
+    new THREE.MeshLambertMaterial());
     floor.rotation.x = -Math.PI / 2;
     scene.add(floor);
     floor.castShadow = true; floor.receiveShadow = true;
@@ -218,6 +218,18 @@ function animate() {
     }
     stick1.setT(60/gcontrols.bpm);
     stick2.setT(60/gcontrols.bpm);
+
+
+    if(time%10 === 0 && time <= 120)
+        IntensityUPDown('up');
+    if(time%20 === 0 && time > 130 && time < 1000)
+        BpmUpDown('up');
+    if(time%20 === 0 && time > 130 && time < 440)
+        IntensityUPDown('down');
+    if(time%20 === 0 && time > 1000)
+        BpmUpDown('down');
+    if(time%100 === 0 && time > 1000 && time < 1200)
+        IntensityUPDown('up');
 
     controls.update();
     requestAnimationFrame(animate);
@@ -286,20 +298,6 @@ function HitOnce() {
             stick2.startOneCycle();
             
     }
-
-    if((time%10 === 0) && time <= 100)
-        IntensityUPDown(1);
-    if(time%10 === 0 && (time > 130 && time < 500))
-        BpmUpDown(1);
-    if(time%20 === 0 && (time > 130 && time < 230))
-        IntensityUPDown(0);
-    if(time%10 === 0 && (time > 500  && time < 950))
-        BpmUpDown(0);
-    if((gcontrols.bpm === 60 && time > 930) && time%5 === 0)
-        IntensityUPDown(0);
-    if(gcontrols.intensity === 0.1 && (gcontrols.bpm === 60 && time > 930))
-        stop();
-
     if(setTimeoutControl)
     	setTimeout(HitOnce, (60/gcontrols.bpm*1000)/2);
 }
