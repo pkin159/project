@@ -46,55 +46,10 @@ function score3D(){
 var tempo = 120;
 var tmp =[]
 var scores =[];
-function receiveMessage(event)
-{
-  // Do we trust the sender of this message?
-  if (event.origin !== "http://jennyhyc.github.io")
-    return;
-    tempo = window.opener.tempo;  // bpm
-    tmp = window.opener.scores;  // score
 
-    scores = [];
-    for(var i=0; i<tmp.length; i++){
-      var curScore = new score3D();
-      curScore.time = tmp[i].time * 2;   // note4 -> note8
-      curScore.intensity = tmp[i].intensity;
-      //curScore.instrument = tmp.instrument;
-      //* drumName = ["hatCl", "hatOp", "snare", "tomHh", "bass", "tomLw", "tomFl", "crash", "ride"];
-      // change instruments' name 
-      switch( tmp[i].instrument ){
-        case "hatCl":
-          curScore.instrument = "hatCl";
-          break;
-        case "hatOp":
-          curScore.instrument = "hatOp";
-          break;
-        case "snare":
-          curScore.instrument = "s";
-          break;
-        case "tomHh":
-          curScore.instrument = "tomHh";
-          break;
-        case "bass":
-          curScore.instrument = "b";
-          break;
-        case "tomLw":
-          curScore.instrument = "tomLw";
-          break;
-        case "tomFl":
-          curScore.instrument = "tomFl";
-          break;
-        case "crash":
-          curScore.instrument = "crash";
-          break;
-        case "ride":
-          curScore.instrument = "ride";
-          break;
-      }
-      scores.push( curScore );
-    }
-}
 
+
+console.log(scores);
 normalLR(scores);
 
 var demo1 = normalLR(scoredemo);
@@ -495,7 +450,12 @@ function init() {
     window.addEventListener('resize', onWindowResize, false);
     window.addEventListener("message", receiveMessage, false);
 }
-
+function receiveMessage(event)
+{
+  // Do we trust the sender of this message?
+  if (event.origin !== "http://jennyhyc.github.io")
+    return;
+}
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -522,10 +482,56 @@ var check = 1;
 function play(){
     
     if(check){
+
         setTimeoutControl = 1;
+
+        tempo = window.opener.tempo;  // bpm
+        tmp = window.opener.scores;  // score
+        console.log('tmp',tmp);
+        scores = [];
+        for(var i=0; i<tmp.length; i++){
+          var curScore = new score3D();
+          curScore.time = tmp[i].time * 2;   // note4 -> note8
+          curScore.intensity = tmp[i].intensity;
+          //curScore.instrument = tmp.instrument;
+          //* drumName = ["hatCl", "hatOp", "snare", "tomHh", "bass", "tomLw", "tomFl", "crash", "ride"];
+          // change instruments' name 
+          switch( tmp[i].instrument ){
+            case "hatCl":
+              curScore.instrument = "hatCl";
+              break;
+            case "hatOp":
+              curScore.instrument = "hatOp";
+              break;
+            case "snare":
+              curScore.instrument = "s";
+              break;
+            case "tomHh":
+              curScore.instrument = "tomHh";
+              break;
+            case "bass":
+              curScore.instrument = "b";
+              break;
+            case "tomLw":
+              curScore.instrument = "tomLw";
+              break;
+            case "tomFl":
+              curScore.instrument = "tomFl";
+              break;
+            case "crash":
+              curScore.instrument = "crash";
+              break;
+            case "ride":
+              curScore.instrument = "ride";
+              break;
+          }
+          scores.push( curScore );
+        }
+
         bpm = tempo;
         stick1.setT(60/bpm);
         stick2.setT(60/bpm);
+
         standby();
         check = 0;
     }
