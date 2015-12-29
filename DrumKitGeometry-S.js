@@ -641,7 +641,7 @@ function Hihat(){
     var	geometry = new THREE.CylinderGeometry( 9, 50, 3, 128);
     geometry.openEnded = true;
     var material = new THREE.MeshPhongMaterial({
-    	color:0xffff00
+    	color:0xB49C6D
     });
 	var mesh = new THREE.Mesh(geometry, material);
     mesh.castShadow = true; mesh.receiveShadow = true;
@@ -742,7 +742,7 @@ function Crash(){
     var geometry = new THREE.CylinderGeometry( 9, 50, 3, 128);
     geometry.openEnded = true;
     var material = new THREE.MeshPhongMaterial({
-        color:0xffff00
+        color:0xB49C6D
     });
     var mesh = new THREE.Mesh(geometry, material);
     mesh.castShadow = true; mesh.receiveShadow = true;
@@ -824,7 +824,7 @@ function Ride(){
     var geometry = new THREE.CylinderGeometry( 9, 60, 3, 128);
     geometry.openEnded = true;
     var material = new THREE.MeshPhongMaterial({
-        color:0xffff00
+        color:0xB49C6D
     });
     var mesh = new THREE.Mesh(geometry, material);
     mesh.castShadow = true; mesh.receiveShadow = true;
@@ -1056,7 +1056,7 @@ function newMesh(){
  
     var geometry = new THREE.CylinderGeometry(1.4, 1.4, 70, 32);
     var material = new THREE.MeshPhongMaterial({
-        color: 0xffff00
+        color: 0xDF9457
     });
     var cylinder = new THREE.Mesh(geometry, material);
 
