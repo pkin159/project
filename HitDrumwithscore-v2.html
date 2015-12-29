@@ -47,6 +47,8 @@ if(yourscore[0].bpm !== undefined){
 //var scoreArray = normalLR(/*score!!!!!!!!!!*/);
     //console.log(scoreArray);
     normalLR(/*score*/);
+var demo1 = normalLR(scoredemo);
+var demo2 = normalLR(scoredemo2);
 //////////////////////////////
 
 
@@ -530,13 +532,13 @@ function standby(scoreNum){
             var startplay = setTimeout(playScore1, i * (60/bpm*1000), score);
             timeOuts.push(startplay);
         case 1:
-            var demo1 = normalLR(scoredemo);
+            //var demo1 = normalLR(scoredemo);
             console.log(scoredemo);
             var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo1);
             timeOuts.push(startplay);
             break;
         case 2:
-            var demo2 = normalLR(scoredemo2);
+            //var demo2 = normalLR(scoredemo2);
             var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo2);
             timeOuts.push(startplay);
             break;

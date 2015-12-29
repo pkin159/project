@@ -1,28 +1,8 @@
-function ScoreSort(score){
-  var scr = score || [];
-  var aftscr = [];
-
-  for(var i = 0, time = 0; aftscr.length != scr.length; i++){
-    if(i == scr.length){
-      i = 0;
-      time++;
-    }
-    if(scr[i].time == time){
-      var tempscore = {time:0, intensity: 0, instrument: 'null'};
-      tempscore.time = scr[i].time;
-      tempscore.intensity = scr[i].intensity;
-      tempscore.instrument = scr[i].instrument;
-      aftscr.push(tempscore);
-      //lengthA ++;
-    }
-  }
-  return aftscr;
-
-}
-
 function normalLR(score){
-	var scr = ScoreSort(score) || [];
+	var scr = score || [];
   var aftscr = [];
+
+  scr.sort(function (a,b) {return a.time>b.time})
 
 	for(var i = 0, j = 0 ; i < scr.length; i++){
     var tempscore = {time:0, intensity: 0, instrument: 'null', LR: 'null'};
