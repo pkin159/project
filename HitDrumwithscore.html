@@ -38,51 +38,61 @@ var bpm = 60;
 var sounds;
 
 //////////////////////////////
-var tempo = window.opener.tempo;  // bpm
-var tmp = window.opener.scores;  // score
 function score3D(){
   this.time;
   this.intensity;
   this.instrument;
 }
-var scores = [];
-for(var i=0; i<tmp.length; i++){
-  var curScore = new score3D();
-  curScore.time = tmp[i].time * 2;   // note4 -> note8
-  curScore.intensity = tmp[i].intensity;
-  //curScore.instrument = tmp.instrument;
-  //* drumName = ["hatCl", "hatOp", "snare", "tomHh", "bass", "tomLw", "tomFl", "crash", "ride"];
-  // change instruments' name 
-  switch( tmp[i].instrument ){
-    case "hatCl":
-      curScore.instrument = "hatCl";
-      break;
-    case "hatOp":
-      curScore.instrument = "hatOp";
-      break;
-    case "snare":
-      curScore.instrument = "s";
-      break;
-    case "tomHh":
-      curScore.instrument = "tomHh";
-      break;
-    case "bass":
-      curScore.instrument = "b";
-      break;
-    case "tomLw":
-      curScore.instrument = "tomLw";
-      break;
-    case "tomFl":
-      curScore.instrument = "tomFl";
-      break;
-    case "crash":
-      curScore.instrument = "crash";
-      break;
-    case "ride":
-      curScore.instrument = "ride";
-      break;
-  }
-  scores.push( curScore );
+var tempo = 120;
+var tmp =[]
+var scores =[];
+function receiveMessage(event)
+{
+  // Do we trust the sender of this message?
+  if (event.origin !== "http://jennyhyc.github.io")
+    return;
+    tempo = window.opener.tempo;  // bpm
+    tmp = window.opener.scores;  // score
+
+    scores = [];
+    for(var i=0; i<tmp.length; i++){
+      var curScore = new score3D();
+      curScore.time = tmp[i].time * 2;   // note4 -> note8
+      curScore.intensity = tmp[i].intensity;
+      //curScore.instrument = tmp.instrument;
+      //* drumName = ["hatCl", "hatOp", "snare", "tomHh", "bass", "tomLw", "tomFl", "crash", "ride"];
+      // change instruments' name 
+      switch( tmp[i].instrument ){
+        case "hatCl":
+          curScore.instrument = "hatCl";
+          break;
+        case "hatOp":
+          curScore.instrument = "hatOp";
+          break;
+        case "snare":
+          curScore.instrument = "s";
+          break;
+        case "tomHh":
+          curScore.instrument = "tomHh";
+          break;
+        case "bass":
+          curScore.instrument = "b";
+          break;
+        case "tomLw":
+          curScore.instrument = "tomLw";
+          break;
+        case "tomFl":
+          curScore.instrument = "tomFl";
+          break;
+        case "crash":
+          curScore.instrument = "crash";
+          break;
+        case "ride":
+          curScore.instrument = "ride";
+          break;
+      }
+      scores.push( curScore );
+    }
 }
 normalLR(scores);
 
@@ -482,6 +492,7 @@ function init() {
 
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener("message", receiveMessage, false);
 }
 
 function onWindowResize() {
@@ -511,6 +522,7 @@ function play(){
     
     if(check){
         setTimeoutControl = 1;
+        bpm = tempo;
         stick1.setT(60/bpm);
         stick2.setT(60/bpm);
         standby();
