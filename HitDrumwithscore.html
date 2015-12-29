@@ -94,6 +94,7 @@ function receiveMessage(event)
       scores.push( curScore );
     }
 }
+
 normalLR(scores);
 
 var demo1 = normalLR(scoredemo);
@@ -580,7 +581,7 @@ function standby(scoreNum){
     }
     switch(scoreNum){
         case 0:
-            var startplay = setTimeout(playScore1, i * (60/bpm*1000), score);
+            var startplay = setTimeout(playScore1, i * (60/bpm*1000), scores);
             timeOuts.push(startplay);
         case 1:
             //var demo1 = normalLR(scoredemo);
