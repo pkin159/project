@@ -120,7 +120,7 @@ var Stick = function () {
         for (var i = 1; i < this.keys.length; i++) {
             if (s < this.keys[i].timeS) break;
         }
-        if(s>0.38)
+        if(s>0.3999)
             console.log('hit',clock.getElapsedTime());
         var vv = this.keys[i - 1].value + (s - this.keys[i - 1].timeS) / (this.keys[i].timeS - this.keys[i - 1].timeS) * (this.keys[i].value - this.keys[i - 1].value);
         return vv;
@@ -497,7 +497,8 @@ function animate() {
     stick2.update(clock.getElapsedTime());
     step.update(clock.getElapsedTime());
     }
-
+    stick1.setT(60/gcontrols.bpm);
+    stick2.setT(60/gcontrols.bpm);
     controls.update();
     requestAnimationFrame(animate);
     render();

@@ -316,7 +316,8 @@ function animate() {
     stick1.update(clock.getElapsedTime());
     stick2.update(clock.getElapsedTime());
     }
-
+    stick1.setT(60/gcontrols.bpm);
+    stick2.setT(60/gcontrols.bpm)
     controls.update();
     requestAnimationFrame(animate);
     render();
