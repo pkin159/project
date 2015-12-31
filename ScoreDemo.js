@@ -2,7 +2,7 @@ var scoredemo = [
 		{
 			time: 0,
 		    intensity: 0.5,
-		    instrument:'b'
+		    instrument:'b',
 		},{
 			time: 1,
 		    intensity: 0.5,
@@ -50,7 +50,7 @@ var scoredemo = [
 		},{
 			time: 7,
 		    intensity: 0.5,
-		    instrument:'hatCl'
+		    instrument:'s'
 		}
 		];
 var scoredemo2 = [
@@ -184,55 +184,68 @@ var scoredemo3 =[
 		{
 			time: 0,
 		    intensity: 0.8,
-		    instrument:'s'
+		    instrument:'s',
+		    LR: 'Right'
 		},{
 			time: 2,
 		    intensity: 0.8,
-		    instrument:'s'
+		    instrument:'s',
+		    LR: 'Right'
 		},{
 			time: 3,
 		    intensity: 0.4,
-		    instrument:'s'
+		    instrument:'s',
+		    LR: 'Left'
 		},{
 			time: 3.33,
 		    intensity: 0.4,
-		    instrument:'s'
+		    instrument:'s',
+		    LR: 'Right'
 		},{
 			time: 3.67,
 		    intensity: 0.4,
-		    instrument:'s'
+		    instrument:'s',
+		    LR: 'Left'
 		},{
 			time: 4,
 		    intensity: 0.8,
-		    instrument:'s'
+		    instrument:'s',
+		    LR: 'Right'
 		},{
 			time: 5,
 		    intensity: 0.4,
-		    instrument:'s'
+		    instrument:'s',
+		    LR: 'Left'
 		},{
 			time: 5.33,
 		    intensity: 0.4,
-		    instrument:'s'
+		    instrument:'s',
+		    LR: 'Right'
 		},{
 			time: 5.67,
 		    intensity: 0.4,
-		    instrument:'s'
+		    instrument:'s',
+		    LR: 'Left'
 		},{
 			time: 6,
 		    intensity: 0.4,
-		    instrument:'s'
+		    instrument:'s',
+		    LR: 'Right'
 		},{
 			time: 6.33,
 		    intensity: 0.4,
-		    instrument:'s'
+		    instrument:'s',
+		    LR: 'Left'
 		},{
 			time: 6.67,
 		    intensity: 0.4,
-		    instrument:'s'
+		    instrument:'s',
+		    LR: 'Right'
 		},{
 			time: 7,
 		    intensity: 0.8,
-		    instrument:'s'
+		    instrument:'s',
+		    LR: 'Left'
 		},
 	];
 

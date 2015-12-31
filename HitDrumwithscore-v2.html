@@ -61,7 +61,7 @@ if(yourscore[0].bpm !== undefined){
     normalLR(/*score*/);
 var demo1 = normalLR(scoredemo);
 var demo2 = normalLR(scoredemo2);
-var demo3 = normalLR(scoredemo3);
+var demo3 = scoredemo3;
 //////////////////////////////
 
 
@@ -402,7 +402,7 @@ function init() {
     var gridHelper = new THREE.GridHelper( 700, 50);
     gridHelper.position.set(0,-1,0);
     gridHelper.setColors(0x000000,0x000000);
-    //scene.add( gridHelper );
+    scene.add( gridHelper );
 
     step.setT(0.5);
     step.startOneCycle();
@@ -436,6 +436,14 @@ function init() {
         //light.angle =  Math.PI / 12;
         //lightarray[i].target = lighttarget[i];
     }
+
+    var backlight = new THREE.SpotLight(0xffffff, 1.5);
+    backlight.exponent = 20;
+    backlight.castShadow = false;
+    backlight.position.set(0, 500, -400);
+    backlight.target = bass;
+    scene.add(backlight);
+
 
     lightarray[0].target = snare;
     lightarray[1].target = bass;
