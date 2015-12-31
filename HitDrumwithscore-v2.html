@@ -24,10 +24,12 @@ body {
 
 <body>
 <div id  = 'control'>
-        <button id = "play">Play </a>
-        <button id = "play1">PlayDemo1</a>
-        <button id = "play2">PlayDemo2</a><br>
-		<button id = "reset">Reset </a><br>
+        <button id = "play">Play</button>
+        <button id = "play1">PlayDemo1</button>
+        <button id = "play2">PlayDemo2</button>
+        <button id = "play3">PlayDemo3</button>
+		<button id = "reset">Reset </button><br>
+
 	</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js"></script>
@@ -59,6 +61,7 @@ if(yourscore[0].bpm !== undefined){
     normalLR(/*score*/);
 var demo1 = normalLR(scoredemo);
 var demo2 = normalLR(scoredemo2);
+var demo3 = normalLR(scoredemo3);
 //////////////////////////////
 
 
@@ -84,13 +87,13 @@ var Stick = function () {
         timeS: 0,
         value: 0
     }, {
-        timeS: 0.2,
+        timeS: 0.1,
         value: 0.2//3.14 / 4
     }, {
-        timeS: 0.4,
+        timeS: 0.2,
         value: -.2
     },{
-        timeS: 0.8,
+        timeS: 0.4,
         value: 0
     },
        {
@@ -513,6 +516,17 @@ $('#play2').click(function(){
         check = 0;
     }
 });
+$('#play3').click(function(){
+    
+    if(check){
+        setTimeoutControl = 1;
+        bpm = 90;
+        stick1.setT(60/bpm);
+        stick2.setT(60/bpm);
+        standby(3);
+        check = 0;
+    }
+});
 $('#reset').click(function(){
     
     setTimeoutControl = 0;
@@ -552,6 +566,10 @@ function standby(scoreNum){
         case 2:
             //var demo2 = normalLR(scoredemo2);
             var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo2);
+            timeOuts.push(startplay);
+            break;
+        case 3:
+            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo3);
             timeOuts.push(startplay);
             break;
     }

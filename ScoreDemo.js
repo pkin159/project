@@ -180,3 +180,60 @@ var scoredemo2 = [
 		    instrument:'tomFl'
 		}
 	];
+var scoredemo3 =[
+		{
+			time: 0,
+		    intensity: 0.8,
+		    instrument:'s'
+		},{
+			time: 2,
+		    intensity: 0.8,
+		    instrument:'s'
+		},{
+			time: 3,
+		    intensity: 0.4,
+		    instrument:'s'
+		},{
+			time: 3.33,
+		    intensity: 0.4,
+		    instrument:'s'
+		},{
+			time: 3.67,
+		    intensity: 0.4,
+		    instrument:'s'
+		},{
+			time: 4,
+		    intensity: 0.8,
+		    instrument:'s'
+		},{
+			time: 5,
+		    intensity: 0.4,
+		    instrument:'s'
+		},{
+			time: 5.33,
+		    intensity: 0.4,
+		    instrument:'s'
+		},{
+			time: 5.67,
+		    intensity: 0.4,
+		    instrument:'s'
+		},{
+			time: 6,
+		    intensity: 0.4,
+		    instrument:'s'
+		},{
+			time: 6.33,
+		    intensity: 0.4,
+		    instrument:'s'
+		},{
+			time: 6.67,
+		    intensity: 0.4,
+		    instrument:'s'
+		},{
+			time: 7,
+		    intensity: 0.8,
+		    instrument:'s'
+		},
+	];
+
+///0 2 3 3.33 3.67 4 5 5.33 5.67 6 6.33 6.67 7
