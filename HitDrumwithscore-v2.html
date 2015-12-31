@@ -62,6 +62,7 @@ if(yourscore[0].bpm !== undefined){
 var demo1 = normalLR(scoredemo);
 var demo2 = normalLR(scoredemo2);
 var demo3 = scoredemo3;
+console.log (demo1);
 //////////////////////////////
 
 
@@ -577,7 +578,7 @@ function standby(scoreNum){
             timeOuts.push(startplay);
             break;
         case 3:
-            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo3);
+            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo3,true);
             timeOuts.push(startplay);
             break;
     }
@@ -714,16 +715,19 @@ function Sound(instrument, intensity){
     }
 }
 
-function playScore1(score) {
+function playScore1(score,repeat) {
     var sco = score || [];
+    var re = repeat || false;
     for (var i = 0; i < sco.length; i++) {
         var timeout = setTimeout(HitOnce, sco[i].time *(60/bpm*1000)/2, sco[i].intensity, sco[i].LR, sco[i].instrument, sco[i].time);
         //var sound = setTimeout(Sound,  (sco[i].time) *(60/bpm*1000)/2, sco[i].instrument, sco[i].intensity);
         timeOuts.push(timeout);
         //timeOuts.push(sound);
     }
-    var nextround = setTimeout(playScore1, (sco[sco.length-1].time+1) *(60/bpm*1000)/2, sco);
+    if(re){
+    var nextround = setTimeout(playScore1, (sco[sco.length-1].time+1) *(60/bpm*1000)/2, sco,true);
     timeOuts.push(nextround);
+    }
 }
 function Stoptimeout(){
     for(var i = 0; i < timeOuts.length; i++)

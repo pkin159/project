@@ -16,7 +16,143 @@ var scoredemo = [
 		    intensity: 0.5,
 		    instrument:'b'
 		},{
-			time: 3,
+			time: 8,
+		    intensity: 0.5,
+		    instrument:'b',
+		},{
+			time: 9,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 12,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 13,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 16,
+		    intensity: 0.5,
+		    instrument:'b',
+		},{
+			time: 17,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 20,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 21,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 24,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 26,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 28,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 30,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 32,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 2,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 6,
+		    intensity: 0.8,
+		    instrument:'s'
+		},{
+			time: 10,
+		    intensity: 0.8,
+		    instrument:'s'
+		},{
+			time: 14,
+		    intensity: 0.8,
+		    instrument:'s'
+		},{
+			time: 18,
+		    intensity: 0.8,
+		    instrument:'s'
+		},{
+			time: 22,
+		    intensity: 0.8,
+		    instrument:'s'
+		},{
+			time: 24,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 24.5,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 25,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 25.5,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 26,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 26.5,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 27,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 27.5,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 28,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 28.5,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 29,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 29.5,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 30,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 30.5,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 31,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 31.5,
 		    intensity: 0.5,
 		    instrument:'s'
 		},{
@@ -50,7 +186,75 @@ var scoredemo = [
 		},{
 			time: 7,
 		    intensity: 0.5,
-		    instrument:'s'
+		    instrument:'hatCl'
+		},{
+			time: 8,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 9,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 10,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 11,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 12,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 13,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 14,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 15,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 16,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 17,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 18,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 19,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 20,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 21,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 22,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 23,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 32,
+		    intensity: 1,
+		    instrument:'crash'
 		}
 		];
 var scoredemo2 = [
