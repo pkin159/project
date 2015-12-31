@@ -29,6 +29,7 @@ body {
         <button id = "play2">PlayDemo2</button>
         <button id = "play3">PlayDemo3</button>
         <button id = "play4">Test</button>
+        <button id = "play5">Test2</button>
 		<button id = "reset">Reset </button><br>
 
 	</div>
@@ -64,6 +65,7 @@ var demo1 = normalLR(scoredemo);
 var demo2 = normalLR(scoredemo2);
 var demo3 = scoredemo3;
 var demo4 = normalLR(scoredemo4);
+var demo5 = normalLR(scoredemo5);
 console.log (demo1);
 //////////////////////////////
 
@@ -174,7 +176,7 @@ var BassStep = function () {
         timeS: 0,
         value: -0.52
     },{
-        timeS: 0.5,
+        timeS: 0.2,
         value: 0//3.14 / 4
     },{
         timeS: 1,
@@ -185,7 +187,7 @@ var BassStep = function () {
         timeS: 0,
         value: -0.52
     },{
-        timeS: 0.5,
+        timeS: 0.2,
         value: 0.5//3.14 / 4
     },{
         timeS: 1,
@@ -549,6 +551,17 @@ $('#play4').click(function(){
         check = 0;
     }
 });
+$('#play5').click(function(){
+    
+    if(check){
+        setTimeoutControl = 1;
+        bpm = 120;
+        stick1.setT(60/bpm);
+        stick2.setT(60/bpm);
+        standby(5);
+        check = 0;
+    }
+});
 $('#reset').click(function(){
     
     setTimeoutControl = 0;
@@ -596,6 +609,10 @@ function standby(scoreNum){
             break;
         case 4:
             var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo4);
+            timeOuts.push(startplay);
+            break;
+        case 5:
+            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo5);
             timeOuts.push(startplay);
             break;
     }

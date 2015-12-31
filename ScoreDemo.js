@@ -384,7 +384,6 @@ var scoredemo2 = [
 		    instrument:'tomFl'
 		}
 	];
-
 var scoredemo3 =[
 		{
 			time: 0,
@@ -487,5 +486,91 @@ var scoredemo4 =[
 	    intensity: 0.4,
 	    instrument:'s',
 	}
+];
+var scoredemo4 =[
+	{
+		time: 0,
+	    intensity: 0.8,
+	    instrument:'b',
+	},{
+		time: 2,
+	    intensity: 0.8,
+	    instrument:'b',
+	},{
+		time: 4,
+	    intensity: 0.4,
+	    instrument:'b',
+	},{
+		time: 6,
+	    intensity: 0.4,
+	    instrument:'b',
+	},{
+		time: 1,
+	    intensity: 0.4,
+	    instrument:'s',
+	},{
+		time: 3,
+	    intensity: 0.8,
+	    instrument:'s',
+	},{
+		time: 5,
+	    intensity: 0.4,
+	    instrument:'s',
+	},{
+		time: 7,
+	    intensity: 0.4,
+	    instrument:'s',
+	}
+];
+var scoredemo5 =[
+		{
+			time: 0,
+		    intensity: 0.5,
+		    instrument:'b',
+		},{
+			time: 1,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 4,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 5,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 0,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 1,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 2,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 3,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 4,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 5,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 6,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		},{
+			time: 7,
+		    intensity: 0.5,
+		    instrument:'hatCl'
+		}
 ];
 ///0 2 3 3.33 3.67 4 5 5.33 5.67 6 6.33 6.67 7
