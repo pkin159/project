@@ -1,12 +1,20 @@
 <html>
 <head>
-<style>#info {
+<style>
+#info {
     position: absolute;
     top: 0px;
     width: 100%;
     padding: 10px;
     text-align: center;
     color: #ffff00
+}
+#control {
+  position: absolute;
+  top: 0px;
+  padding: 10px;
+  text-align: center;
+  color: #00ff00
 }
 body {
     overflow: hidden;
@@ -15,48 +23,92 @@ body {
 </head>
 
 <body>
-<div id  = info><a href = "javascript:play();">play </a>
-                <a href = "javascript:play1();">playDemo1</a>
-                <a href = "javascript:play2();">playDemo2</a><br>
-                <a href = "javascript:reset();">reset </a><br>
+<div id  = 'control'>
+        <button id = "play">Play</button>
+        <button id = "play1">PlayDemo1</button>
+        <button id = "play2">PlayDemo2</button>
+        <button id = "play3">PlayDemo3</button>
+        <button id = "play4">Test</button>
+        <button id = "play5">Test2</button>
+        <button id = "reset">Reset </button><br>
+
     </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js"></script>
 <script src="https://dl.dropboxusercontent.com/u/3587259/Code/Threejs/OrbitControls.js"></script>
 <script src='https://jyunming-chen.github.io/WebAudio/js/shared.js'></script>
 <script src="https://pkin159.github.io/project/js/dat.gui.min.js"></script>
-<script src="scoreNoLR.js"></script>
-<script src="DrumKitGeometry-S.js"></script>
-<script src="normallr.js"></script>
-<script src="ScoreDemo.js"></script>
+<script src="https://pkin159.github.io/project/js/jquery-2.1.4.min.js"></script>
+<script src="https://pkin159.github.io/project/scoreNoLR.js"></script>
+<script src="https://pkin159.github.io/project/DrumKitGeometry-S.js"></script>
+<script src="https://pkin159.github.io/project/normallr.js"></script>
+<script src="https://pkin159.github.io/project/ScoreDemo.js"></script>
+<!--
+<script src="HitDrumwithscore.js"></script>
+-->
 <script>
+
+//* here
+function score3D(){
+  this.time;
+  this.intensity;
+  this.instrument;
+}
+var tempo = window.opener.tempo;  // bpm
+var tmp = window.opener.scoresTo3D;  // score
+var scores = [];
+//alert(tempo);
 
 var frameStart, frameEnd;
 var intensity = 0.5;
 var instrument = "s";
 var bpm = 60;
 var sounds;
+//////////////////////////////    
+for(var i=0; i<tmp.length; i++){
+    var tempscore = {time:0, intensity: 0, instrument: 'null', LR: 'null'};
+    tempscore.time = tmp[i].time*2;   // note4 -> note8
+    tempscore.intensity = tmp[i].intensity;
 
-//////////////////////////////
-function score3D(){
-  this.time;
-  this.intensity;
-  this.instrument;
+    switch( tmp[i].instrument ){
+      case "hatCl":
+        tempscore.instrument = "hatCl";
+        break;
+      case "hatOp":
+        tempscore.instrument = "hatOp";
+        break;
+      case "snare":
+        tempscore.instrument = "s";
+        break;
+      case "tomHh":
+        tempscore.instrument = "tomHh";
+        break;
+      case "bass":
+        tempscore.instrument = "b";
+        break;
+      case "tomLw":
+        tempscore.instrument = "tomLw";
+        break;
+      case "tomFl":
+        tempscore.instrument = "tomFl";
+        break;
+      case "crash":
+        tempscore.instrument = "crash";
+        break;
+      case "ride":
+        tempscore.instrument = "ride";
+        break;
+    }
+scores.push( tempscore );
 }
-var tempo = 120;
-var tmp =[]
-var scores =[];
-
-
-
-console.log(scores);
-normalLR(scores);
+var demo = normalLR(scores);
 
 var demo1 = normalLR(scoredemo);
 var demo2 = normalLR(scoredemo2);
+var demo3 = scoredemo3;
+var demo4 = normalLR(scoredemo4);
+var demo5 = normalLR(scoredemo5);
 //////////////////////////////
-
-
 var SoundSample = function(){
         loadSounds(this, {
         bass: 'https://jennyhyc.github.io/project/sounds/drum/bass.mp3',
@@ -71,7 +123,6 @@ var SoundSample = function(){
         tomLw: 'https://jennyhyc.github.io/project/sounds/drum/tomLw.mp3'
     });
 }
-
 var Stick = function () {
     // properties
     this.T = 4; // in seconds
@@ -93,7 +144,6 @@ var Stick = function () {
         value: 0
     }
                 ];
-
     this.frame1 = new THREE.Object3D();  // starting & ending frames
     this.frame2 = new THREE.Object3D();  // of startOneCycle
                                          // default frame1 = frame2 = frameChair.clone();
@@ -104,7 +154,6 @@ var Stick = function () {
     this.group = newMesh();
     this.object = new THREE.Object3D();
     this.object.add(this.group);
-
     // methods
     this.setT = function (period) {
         this.T = period;
@@ -112,31 +161,24 @@ var Stick = function () {
     this.setMaxKeysValue = function (intensity){
         this.keys[1].value = intensity;
     }
-
     this.interpolate = function (s) { // normalized time
         if (s > 1) // end of cycle
         return this.keys[this.keys.length - 1].value;
-
         for (var i = 1; i < this.keys.length; i++) {
             if (s < this.keys[i].timeS) break;
         }
-
         var vv = this.keys[i - 1].value + (s - this.keys[i - 1].timeS) / (this.keys[i].timeS - this.keys[i - 1].timeS) * (this.keys[i].value - this.keys[i - 1].value);
         return vv;
     };
-
     this.update = function (time) { // time: elapsedTime
         var s = (time - this.startTime) / this.T;
        
         this.tt = (this.tt + 0.01) || 0;
-
         
-
         this.angle = this.interpolate(s);
         this.group.rotation.x = this.angle;
         
         var quat = new THREE.Quaternion();
-
         if(this.tt > 1){     
             this.tt = 1;
         
@@ -147,15 +189,12 @@ var Stick = function () {
         
         var pos = this.frame1.position.lerp(this.frame2.position, s);
         this.object.position.set(pos.x, pos.y, pos.z);
-
     }
-
     this.startOneCycle = function () {
         this.startTime = clock.getElapsedTime();
     }
    
 }
-
 var BassStep = function () {
     // properties
     this.T = 4; // in seconds
@@ -197,31 +236,24 @@ var BassStep = function () {
         var tempkeys = keys;
         if (s > 1) // end of cycle
         return tempkeys[tempkeys.length - 1].value;
-
         for (var i = 1; i < tempkeys.length; i++) {
             if (s < tempkeys[i].timeS) break;
         }
-
         var vv = tempkeys[i - 1].value + (s - tempkeys[i - 1].timeS) / (tempkeys[i].timeS - tempkeys[i - 1].timeS) * (tempkeys[i].value - tempkeys[i - 1].value);
         return vv;
     };
-
     this.update = function (time) { // time: elapsedTime
         var s = (time - this.startTime) / this.T;
-
         this.angleS = this.interpolate(s, this.stepkeys);
         this.angleH = this.interpolate(s, this.headkeys);
         this.group[1].rotation.x = this.angleS;
         this.group[2].rotation.x = this.angleH;
     }
-
     this.startOneCycle = function () {
         this.startTime = clock.getElapsedTime();
     }
    
 }
-
-
 var camera, scene, renderer, frame, frame1, frame2, controls;
 var lightarray = [];
 var timeOuts = [];
@@ -236,7 +268,6 @@ var step = new BassStep();
 var play, CheckF, Check;
 var count = 0;
 var soundsample = new SoundSample();
-
 var poschair = new THREE.Vector3(0, 10, 0);
 var posbass = new THREE.Vector3(15,65,-185);
 var poshihat = new THREE.Vector3( -130, 120, -100);
@@ -246,8 +277,6 @@ var postomR = new THREE.Vector3(25, 160, -195);
 var poscrash = new THREE.Vector3(-100, 120, -180);
 var posride = new THREE.Vector3(130, 120, -170);
 var posfloortom = new THREE.Vector3(100,82,-100);
-
-
 var chair = new Chair();
 var bass = new Bass();
 var hihat = new Hihat();
@@ -259,12 +288,9 @@ var tomHh = new Tom(new THREE.Euler(Math.PI/8, Math.PI*3/4, 0, 'XYZ'));
 var crash = new Crash();
 var ride = new Ride();
 var floortom = new FloorTom();
-
 var lighttarget = [snare, bass, tomHh];
-
 var chairframeR, hihatframeR, snareframeR, tomLwframeR, tomHhframeR, tomFlframeR, crashframeR, rideframeR;
 var chairframeL, hihatframeL, snareframeL, tomLwframeL, tomHhframeL, tomFlframeL, crashframeL, rideframeL;
-
 function setFrame(){
     chairframeR = new THREE.Object3D();
     chairframeR.position.set ( poschair.x+15, poschair.y+110, poschair.z );
@@ -293,7 +319,6 @@ function setFrame(){
     rideframeR = new THREE.Object3D();
     rideframeR.position.set ( 110, 215, -40);
     rideframeR.quaternion.setFromEuler(new THREE.Euler(Math.PI/7, -Math.PI/12, 0, 'YZX'));
-
     chairframeL = new THREE.Object3D();
     chairframeL.position.set ( poschair.x-15, poschair.y+110, poschair.z);
     chairframeL.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), 0);
@@ -322,18 +347,13 @@ function setFrame(){
     rideframeL.position.set ( 40, 215, -70);
     rideframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/7, -Math.PI/4, 0, 'YZX'));    
 }
-
-
 init();
 animate();
-
 function init() {
     scene = new THREE.Scene();
-
-    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 5000);
     camera.position.set(200, 200, 500);
     scene.add(camera);
-
     var geometry = new THREE.BoxGeometry(40, 20, 20);
     var material = new THREE.MeshLambertMaterial({
         color: 0x1234ff
@@ -353,8 +373,6 @@ function init() {
     crash.position.set(poscrash.x, poscrash.y, poscrash.z);
     ride.position.set(posride.x, posride.y, posride.z);
     floortom.position.set(posfloortom.x, posfloortom.y, posfloortom.z);  
-
-
     scene.add(snare);
     scene.add(bass);
     scene.add(hihat);
@@ -364,12 +382,10 @@ function init() {
     scene.add(floortom);
     scene.add(ride);
     setFrame();
-
     frame = new THREE.Object3D();
     scene.add(frame);
     /*var axisHelper = new THREE.AxisHelper(55);
     frame.add(axisHelper);*/
-
     stick1.frame1 = chairframeR.clone();
     stick1.frame2 = chairframeR.clone();
     stick1.setT(0.5);
@@ -379,8 +395,6 @@ function init() {
     stick1.object.add(axisHelperR);
     var gridHelperR = new THREE.GridHelper( 50, 5);
     stick1.object.add( gridHelperR );*/
-
-
     stick2.frame1 = chairframeL.clone();
     stick2.frame2 = chairframeL.clone();
     stick2.setT(0.5);
@@ -390,17 +404,15 @@ function init() {
     stick2.object.add(axisHelperL);
     var gridHelperL = new THREE.GridHelper( 50, 5);
     stick2.object.add( gridHelperL );*/
-
-    /*var gridHelper = new THREE.GridHelper( 300, 10);
-    gridHelper.position.set(0,140,0);
-    scene.add( gridHelper );*/
-
+    var gridHelper = new THREE.GridHelper( 700, 50);
+    gridHelper.position.set(0,-1,0);
+    gridHelper.setColors(0x000000,0x000000);
+    scene.add( gridHelper );
     step.setT(0.5);
     step.startOneCycle();
     step.group[0].position.set(15,0,-90);
     step.group[0].rotation.y = Math.PI;
     scene.add(step.group[0]);
-
     
     for(var i = 0 ; i < 3; i++){
         light = new THREE.SpotLight(0xffffff, 1);
@@ -423,38 +435,25 @@ function init() {
             //lightarray[i].position.set(-400+i%2*800, 500, -400+(i)%2*800);
             lightarray[i].position.set(-400+i%2*400, 500, 400);
         scene.add(lightarray[i]);
-
         //light.angle =  Math.PI / 12;
         //lightarray[i].target = lighttarget[i];
     }
-
     lightarray[0].target = snare;
     lightarray[1].target = bass;
-
     var floor = new THREE.Mesh(new THREE.PlaneGeometry(800, 800, 30, 30),
-    new THREE.MeshLambertMaterial(/*{map:THREE.ImageUtils.loadTexture('floor.jpg')}*/));
+    new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('floor.jpg')}));
     floor.rotation.x = -Math.PI / 2;
     scene.add(floor);
     floor.castShadow = true; floor.receiveShadow = true;
-
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x888888);
     renderer.shadowMapEnabled = true;
     //renderer.shadowMapSoft = true;
     renderer.shadowMapType = THREE.PCFShadowMap;
-
     controls = new THREE.OrbitControls(camera, renderer.domElement);
-
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
-    window.addEventListener("message", receiveMessage, false);
-}
-function receiveMessage(event)
-{
-  // Do we trust the sender of this message?
-  if (event.origin !== "http://jennyhyc.github.io")
-    return;
 }
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -462,8 +461,6 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 ///////////////
-
-
 function animate() {
     
     if(soundsample.snare !== undefined){
@@ -471,73 +468,28 @@ function animate() {
     stick2.update(clock.getElapsedTime());
     step.update(clock.getElapsedTime());
     }
-
     controls.update();
     requestAnimationFrame(animate);
     render();
 }
-
 var setTimeoutControl = 1;
 var check = 1;
-function play(){
-    
+
+$('#play').click(function(){
+    //* here: get scores
+
+
+        
     if(check){
-
         setTimeoutControl = 1;
-
-        tempo = window.opener.tempo;  // bpm
-        tmp = window.opener.scores;  // score
-        console.log('tmp',tmp);
-        scores = [];
-        for(var i=0; i<tmp.length; i++){
-          var curScore = new score3D();
-          curScore.time = tmp[i].time * 2;   // note4 -> note8
-          curScore.intensity = tmp[i].intensity;
-          //curScore.instrument = tmp.instrument;
-          //* drumName = ["hatCl", "hatOp", "snare", "tomHh", "bass", "tomLw", "tomFl", "crash", "ride"];
-          // change instruments' name 
-          switch( tmp[i].instrument ){
-            case "hatCl":
-              curScore.instrument = "hatCl";
-              break;
-            case "hatOp":
-              curScore.instrument = "hatOp";
-              break;
-            case "snare":
-              curScore.instrument = "s";
-              break;
-            case "tomHh":
-              curScore.instrument = "tomHh";
-              break;
-            case "bass":
-              curScore.instrument = "b";
-              break;
-            case "tomLw":
-              curScore.instrument = "tomLw";
-              break;
-            case "tomFl":
-              curScore.instrument = "tomFl";
-              break;
-            case "crash":
-              curScore.instrument = "crash";
-              break;
-            case "ride":
-              curScore.instrument = "ride";
-              break;
-          }
-          scores.push( curScore );
-        }
-
-        bpm = tempo;
-        stick1.setT(60/bpm);
-        stick2.setT(60/bpm);
-
-        standby();
+        stick1.setT(60/tempo);
+        stick2.setT(60/tempo);
+        standby(0);
         check = 0;
     }
     //HitOnce();
-}
-function play1(){
+});
+$('#play1').click(function(){
     
     if(check){
         setTimeoutControl = 1;
@@ -548,8 +500,8 @@ function play1(){
         check = 0;
     }
     //HitOnce();
-}
-function play2(){
+});
+$('#play2').click(function(){
     
     if(check){
         setTimeoutControl = 1;
@@ -559,21 +511,55 @@ function play2(){
         standby(2);
         check = 0;
     }
-    //HitOnce();
-}
-function reset(){
+});
+$('#play3').click(function(){
+    
+    if(check){
+        setTimeoutControl = 1;
+        bpm = 90;
+        stick1.setT(60/bpm);
+        stick2.setT(60/bpm);
+        standby(3);
+        check = 0;
+    }
+});
+$('#play4').click(function(){
+    
+    if(check){
+        setTimeoutControl = 1;
+        bpm = 60;
+        stick1.setT(60/bpm);
+        stick2.setT(60/bpm);
+        standby(4);
+        check = 0;
+    }
+});
+$('#play5').click(function(){
+    
+    if(check){
+        setTimeoutControl = 1;
+        bpm = 120;
+        stick1.setT(60/bpm);
+        stick2.setT(60/bpm);
+        standby(5);
+        check = 0;
+    }
+});
+$('#reset').click(function(){
+    
     setTimeoutControl = 0;
     check = 1;
     Stoptimeout();
-}
+    stick1.frame1 = chairframeR.clone();
+    stick2.frame1 = chairframeL.clone();
+    stick1.frame2 = chairframeR.clone();
+    stick2.frame2 = chairframeL.clone();
+});
 var checkstip = 1;
 function stop(){
     checkstop ^= 1;
     Stoptimeout();
 }
-
-
-
 function standby(scoreNum){
     var num = scoreNum || 0;
     console.log('standby true');
@@ -587,8 +573,10 @@ function standby(scoreNum){
     }
     switch(scoreNum){
         case 0:
-            var startplay = setTimeout(playScore1, i * (60/bpm*1000), scores);
+            console.log(scores);
+            var startplay = setTimeout(playScore1, i * (60/tempo*1000), demo);
             timeOuts.push(startplay);
+            break;
         case 1:
             //var demo1 = normalLR(scoredemo);
             console.log(scoredemo);
@@ -600,15 +588,26 @@ function standby(scoreNum){
             var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo2);
             timeOuts.push(startplay);
             break;
+        case 3:
+            //var demo2 = normalLR(scoredemo2);
+            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo3);
+            timeOuts.push(startplay);
+            break;
+        case 4:
+            //var demo2 = normalLR(scoredemo2);
+            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo4);
+            timeOuts.push(startplay);
+            break;
+        case 5:
+            //var demo2 = normalLR(scoredemo2);
+            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo5);
+            timeOuts.push(startplay);
+            break;
     }
     
     
 }
-
-
 function playSound(buffer,time,intensity){
-
-
     var gainNode = context.createGain();
     var source = context.createBufferSource();
     source.buffer = buffer;
@@ -617,21 +616,17 @@ function playSound(buffer,time,intensity){
     source.connect(gainNode);
     // Connect gain node to destination
     gainNode.connect(context.destination);
-
     var gainval = intensity || 0.5;
     gainNode.gain.value = gainval;
-
     source[source.start ? 'start' : 'noteOn'](time);
 }
-
 function HitOnce(intensity, LR, instrument, time) {
     var ii = intensity || (3.14/4);
     var lr = LR || 'Right';
     var ins = instrument || 'b';
    
-    console.log('stick1',stick1);
-    console.log('stick2',stick1);
-
+    //console.log('stick1',stick1);
+    //console.log('stick2',stick1);
     if(ins !=='b'){
         if(lr === 'Right' ){
                 
@@ -694,7 +689,6 @@ function HitOnce(intensity, LR, instrument, time) {
             var sound = setTimeout(Sound,  (step.headkeys[2].timeS*step.T) * 1000, ins, ii);
             timeOuts.push(sound);
     }
-
 }
 function Sound(instrument, intensity){
     var ins = instrument || 's';
@@ -733,7 +727,6 @@ function Sound(instrument, intensity){
         break;
     }
 }
-
 function playScore1(score) {
     var sco = score || [];
     for (var i = 0; i < sco.length; i++) {
@@ -749,10 +742,11 @@ function Stoptimeout(){
     for(var i = 0; i < timeOuts.length; i++)
         clearTimeout(timeOuts[i]);
 }
-
 function render() {
     renderer.render(scene, camera);
 }
+
+
 
 </script>
 </body>

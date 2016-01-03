@@ -2,7 +2,9 @@ function normalLR(score){
 	var scr = score || [];
   var aftscr = [];
 
-  scr.sort(function (a,b) {return a.time>b.time})
+  console.log('do lr');
+
+  scr.sort(function (a,b) {return a.time - b.time})
 
 	for(var i = 0, j = 0 ; i < scr.length; i++){
     var tempscore = {time:0, intensity: 0, instrument: 'null', LR: 'null'};

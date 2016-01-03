@@ -158,7 +158,7 @@ var Stick = function () {
         this.object.quaternion.copy (quat);
         } 
         
-        var pos = this.frame1.position.lerp(this.frame2.position, s);
+        var pos = this.frame1.position.lerp(this.frame2.position, s+0.05);
         this.object.position.set(pos.x, pos.y, pos.z);
 
     }
@@ -567,6 +567,10 @@ $('#reset').click(function(){
     setTimeoutControl = 0;
     check = 1;
     Stoptimeout();
+    stick1.frame1 = chairframeR.clone();
+    stick2.frame1 = chairframeL.clone();
+    stick1.frame2 = chairframeR.clone();
+    stick2.frame2 = chairframeL.clone();
 });
 
 var checkstip = 1;
