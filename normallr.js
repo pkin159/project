@@ -23,7 +23,57 @@ function normalLR(score){
 	}
   return aftscr;
 }
+function normalLRnew(score,bpm){
+  var scr = score || [];
+  var aftscr = [];
+  var checkdouble = false;
+  var checkthreeble = false;
+  var object =[];
+  console.log('do lr');
 
+  scr.sort(function (a,b) {return a.time - b.time})
+
+  for(var i = 0; i < scr.length; i++){
+    if(Math.floor(scr[i].time) < scr[i].time){
+        if((scr[i].time - Math.floor(scr[i].time) === 0.5) && (checkdouble !== true)){
+            checkdouble = true;
+            bpm *= 2;
+        }else if ( checkthreeble !== true ) {
+            checkthreeble = true;
+            bpm *= 3;
+        }
+    }
+  }
+
+  for(var i = 0, j = 0 ; i < scr.length; i++){
+    var tempscore = {time:0, intensity: 0, instrument: 'null', LR: 'null'};
+    if(scr[i].instrument != 'b'){
+      console.log(true)
+      if(j%2 == 0)
+        tempscore.LR = 'Right';
+      else
+        tempscore.LR = 'Left';
+      j++;
+    }
+    if(checkthreeble || checkdouble){
+      if(checkdouble){
+        tempscore.time = scr[i].time*2;
+      }
+      if(checkthreeble){
+        tempscore.time = scr[i].time*3;
+      }
+    }else{
+      tempscore.time = scr[i].time;
+    }
+    
+    tempscore.intensity = scr[i].intensity;
+    tempscore.instrument = scr[i].instrument;
+    aftscr.push(tempscore);
+  }
+  object.push(aftscr);
+  object.push(bpm);
+  return object;
+}
 
 function snareonly(score){
     var scr = score;

@@ -261,13 +261,69 @@ var scoredemo2 = [
 		{
 			time: 0,
 		    intensity: 0.5,
-		    instrument:'crash'
+		    instrument:'b'
 		},{
-			time: 0,
+			time: 1,
 		    intensity: 0.5,
-		    instrument:'ride'
+		    instrument:'b'
 		},{
-			time: 0,
+			time: 4,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 5,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 8,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 9,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 12,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 13,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 16,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 17,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 20,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 21,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 24,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 26,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 28,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 30,
+		    intensity: 0.5,
+		    instrument:'b'
+		},{
+			time: 32,
 		    intensity: 0.5,
 		    instrument:'b'
 		},{
@@ -275,17 +331,9 @@ var scoredemo2 = [
 		    intensity: 0.5,
 		    instrument:'tomFl'
 		},{
-			time: 1,
-		    intensity: 0.5,
-		    instrument:'b'
-		},{
 			time: 2,
 		    intensity: 0.5,
 		    instrument:'tomFl'
-		},{
-			time: 2,
-		    intensity: 0.5,
-		    instrument:'s'
 		},{
 			time: 3,
 		    intensity: 0.5,
@@ -295,29 +343,13 @@ var scoredemo2 = [
 		    intensity: 0.5,
 		    instrument:'tomFl'
 		},{
-			time: 4,
-		    intensity: 0.5,
-		    instrument:'b'
-		},{
-			time: 4.5,
-		    intensity: 0.5,
-		    instrument:'tomHh'
-		},{
 			time: 5,
-		    intensity: 0.5,
-		    instrument:'tomFl'
-		},{
-			time: 5,
-		    intensity: 0.5,
-		    instrument:'b'
-		},{
-			time: 6,
 		    intensity: 0.5,
 		    instrument:'tomFl'
 		},{
 			time: 6,
 		    intensity: 0.5,
-		    instrument:'s'
+		    instrument:'tomFl'
 		},{
 			time: 7,
 		    intensity: 0.5,
@@ -327,21 +359,9 @@ var scoredemo2 = [
 		    intensity: 0.5,
 		    instrument:'tomFl'
 		},{
-			time: 8,
-		    intensity: 0.5,
-		    instrument:'b'
-		},{
 			time: 9,
 		    intensity: 0.5,
 		    instrument:'tomFl'
-		},{
-			time: 9,
-		    intensity: 0.5,
-		    instrument:'b'
-		},{
-			time: 10,
-		    intensity: 0.5,
-		    instrument:'s'
 		},{
 			time: 10,
 		    intensity: 0.5,
@@ -353,27 +373,11 @@ var scoredemo2 = [
 		},{
 			time: 12,
 		    intensity: 0.5,
-		    instrument:'b'
-		},{
-			time: 12,
-		    intensity: 0.5,
-		    instrument:'tomFl'
-		},{
-			time: 12.5,
-		    intensity: 0.5,
-		    instrument:'tomHh'
-		},{
-			time: 13,
-		    intensity: 0.5,
 		    instrument:'tomFl'
 		},{
 			time: 13,
 		    intensity: 0.5,
-		    instrument:'b'
-		},{
-			time: 14,
-		    intensity: 0.5,
-		    instrument:'s'
+		    instrument:'tomFl'
 		},{
 			time: 14,
 		    intensity: 0.5,
@@ -382,6 +386,142 @@ var scoredemo2 = [
 			time: 15,
 		    intensity: 0.5,
 		    instrument:'tomFl'
+		},{
+			time: 16,
+		    intensity: 0.5,
+		    instrument:'tomFl'
+		},{
+			time: 17,
+		    intensity: 0.5,
+		    instrument:'tomFl'
+		},{
+			time: 18,
+		    intensity: 0.5,
+		    instrument:'tomFl'
+		},{
+			time: 19,
+		    intensity: 0.5,
+		    instrument:'tomFl'
+		},{
+			time: 20,
+		    intensity: 0.5,
+		    instrument:'tomFl'
+		},{
+			time: 21,
+		    intensity: 0.5,
+		    instrument:'tomFl'
+		},{
+			time: 22,
+		    intensity: 0.5,
+		    instrument:'tomFl'
+		},{
+			time: 23,
+		    intensity: 0.5,
+		    instrument:'tomFl'
+		},{
+			time: 2,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 6,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 10,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 14,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 18,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 22,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 24,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 27,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 30,
+		    intensity: 0.5,
+		    instrument:'s'
+		},{
+			time: 4.5,
+		    intensity: 0.5,
+		    instrument:'tomHh'
+		},{
+			time: 12.5,
+		    intensity: 0.5,
+		    instrument:'tomHh'
+		},{
+			time: 20.5,
+		    intensity: 0.5,
+		    instrument:'tomHh'
+		},{
+			time: 25.5,
+		    intensity: 0.5,
+		    instrument:'tomHh'
+		},{
+			time: 28.5,
+		    intensity: 0.5,
+		    instrument:'tomHh'
+		},{
+			time: 31.5,
+		    intensity: 0.5,
+		    instrument:'tomHh'
+		},{
+			time: 25,
+		    intensity: 0.5,
+		    instrument:'tomLw'
+		},{
+			time: 26,
+		    intensity: 0.5,
+		    instrument:'tomLw'
+		},{
+			time: 28,
+		    intensity: 0.5,
+		    instrument:'tomLw'
+		},{
+			time: 29,
+		    intensity: 0.5,
+		    instrument:'tomLw'
+		},{
+			time: 31,
+		    intensity: 0.5,
+		    instrument:'tomLw'
+		},{
+			time: 0,
+		    intensity: 0.5,
+		    instrument:'crash'
+		},{
+			time: 24,
+		    intensity: 0.8,
+		    instrument:'crash'
+		},{
+			time: 27,
+		    intensity: 0.8,
+		    instrument:'crash'
+		},{
+			time: 30,
+		    intensity: 0.8,
+		    instrument:'crash'
+		},{
+			time: 32,
+		    intensity: 0.8,
+		    instrument:'crash'
+		},{
+			time: 0,
+		    intensity: 0.5,
+		    instrument:'ride'
 		}
 	];
 var scoredemo3 =[
@@ -487,41 +627,7 @@ var scoredemo4 =[
 	    instrument:'s',
 	}
 ];
-var scoredemo4 =[
-	{
-		time: 0,
-	    intensity: 0.8,
-	    instrument:'b',
-	},{
-		time: 2,
-	    intensity: 0.8,
-	    instrument:'b',
-	},{
-		time: 4,
-	    intensity: 0.4,
-	    instrument:'b',
-	},{
-		time: 6,
-	    intensity: 0.4,
-	    instrument:'b',
-	},{
-		time: 1,
-	    intensity: 0.4,
-	    instrument:'s',
-	},{
-		time: 3,
-	    intensity: 0.8,
-	    instrument:'s',
-	},{
-		time: 5,
-	    intensity: 0.4,
-	    instrument:'s',
-	},{
-		time: 7,
-	    intensity: 0.4,
-	    instrument:'s',
-	}
-];
+
 var scoredemo5 =[
 		{
 			time: 0,

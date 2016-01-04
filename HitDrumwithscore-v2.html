@@ -61,6 +61,7 @@ if(yourscore[0].bpm !== undefined){
 //var scoreArray = normalLR(/*score!!!!!!!!!!*/);
     //console.log(scoreArray);
     normalLR(/*score*/);
+
 var demo1 = normalLR(scoredemo);
 var demo2 = normalLR(scoredemo2);
 var demo3 = scoredemo3;
@@ -98,7 +99,7 @@ var Stick = function () {
         timeS: 0.2,
         value: -.2
     },{
-        timeS: 0.4,
+        timeS: 0.5,
         value: 0
     },
        {
@@ -106,7 +107,6 @@ var Stick = function () {
         value: 0
     }
                 ];
-
     this.frame1 = new THREE.Object3D();  // starting & ending frames
     this.frame2 = new THREE.Object3D();  // of startOneCycle
                                          // default frame1 = frame2 = frameChair.clone();
@@ -158,7 +158,7 @@ var Stick = function () {
         this.object.quaternion.copy (quat);
         } 
         
-        var pos = this.frame1.position.lerp(this.frame2.position, s+0.05);
+        var pos = this.frame1.position.lerp(this.frame2.position, s+0.1);
         this.object.position.set(pos.x, pos.y, pos.z);
 
     }
@@ -176,7 +176,7 @@ var BassStep = function () {
         timeS: 0,
         value: -0.52
     },{
-        timeS: 0.2,
+        timeS: 0.5,
         value: 0//3.14 / 4
     },{
         timeS: 1,
@@ -187,7 +187,7 @@ var BassStep = function () {
         timeS: 0,
         value: -0.52
     },{
-        timeS: 0.2,
+        timeS: 0.5,
         value: 0.5//3.14 / 4
     },{
         timeS: 1,
@@ -291,12 +291,12 @@ function setFrame(){
     hihatframeR = new THREE.Object3D();
     hihatframeR.position.set ( -35, 170, -65);
     hihatframeR.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, Math.PI/3, 0, 'YZX'));
-    tomLwframeR = new THREE.Object3D();
-    tomLwframeR.position.set ( 0, 180, -80);
-    tomLwframeR.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, Math.PI/14, 0, 'YZX'));
     tomHhframeR = new THREE.Object3D();
-    tomHhframeR.position.set ( 90, 180, -80);
+    tomHhframeR.position.set ( 0, 180, -80);
     tomHhframeR.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, Math.PI/14, 0, 'YZX'));
+    tomLwframeR = new THREE.Object3D();
+    tomLwframeR.position.set ( 90, 180, -80);
+    tomLwframeR.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, Math.PI/14, 0, 'YZX'));
     tomFlframeR = new THREE.Object3D();
     tomFlframeR.position.set ( 30, 135, -45);
     tomFlframeR.quaternion.setFromEuler(new THREE.Euler( 0, -Math.PI/3, 0, 'YZX'));
@@ -319,12 +319,12 @@ function setFrame(){
     hihatframeL = new THREE.Object3D();
     hihatframeL.position.set ( -145, 175, -5);
     hihatframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, -Math.PI/14, 0, 'YZX'));
-    tomLwframeL = new THREE.Object3D();
-    tomLwframeL.position.set ( -60, 180, -80);
-    tomLwframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, -Math.PI/14, 0, 'YZX'));
     tomHhframeL = new THREE.Object3D();
-    tomHhframeL.position.set ( 30, 180, -80);
+    tomHhframeL.position.set ( -60, 180, -80);
     tomHhframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, -Math.PI/14, 0, 'YZX'));
+    tomLwframeL = new THREE.Object3D();
+    tomLwframeL.position.set ( 30, 180, -80);
+    tomLwframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, -Math.PI/14, 0, 'YZX'));
     tomFlframeL = new THREE.Object3D();
     tomFlframeL.position.set ( 20, 135, -75);
     tomFlframeL.quaternion.setFromEuler(new THREE.Euler(0, -Math.PI/3, 0, 'YZX'));
@@ -555,7 +555,7 @@ $('#play5').click(function(){
     
     if(check){
         setTimeoutControl = 1;
-        bpm = 120;
+        bpm = 240;
         stick1.setT(60/bpm);
         stick2.setT(60/bpm);
         standby(5);
@@ -647,13 +647,11 @@ function HitOnce(intensity, LR, instrument, time) {
     var ii = intensity || (3.14/4);
     var lr = LR || 'Right';
     var ins = instrument || 'b';
-   
-    console.log('stick1',stick1);
-    console.log('stick2',stick1);
+
+
 
     if(ins !=='b'){
         if(lr === 'Right' ){
-                
                 if(ins ==='s')
                     stick1.frame2 = snareframeR.clone();
                 if(ins ==='hatOp'){
@@ -681,7 +679,6 @@ function HitOnce(intensity, LR, instrument, time) {
             }
             
         if(lr === 'Left' ){
-            
                 if(ins ==='s')
                     stick2.frame2 = snareframeL.clone();
                 if(ins ==='hatOp'){
@@ -758,9 +755,7 @@ function playScore1(score,repeat) {
     var re = repeat || false;
     for (var i = 0; i < sco.length; i++) {
         var timeout = setTimeout(HitOnce, sco[i].time *(60/bpm*1000)/2, sco[i].intensity, sco[i].LR, sco[i].instrument, sco[i].time);
-        //var sound = setTimeout(Sound,  (sco[i].time) *(60/bpm*1000)/2, sco[i].instrument, sco[i].intensity);
         timeOuts.push(timeout);
-        //timeOuts.push(sound);
     }
     if(re){
     var nextround = setTimeout(playScore1, (sco[sco.length-1].time+1) *(60/bpm*1000)/2, sco,true);
