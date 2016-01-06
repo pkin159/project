@@ -283,8 +283,8 @@ function setFrame(){
     chairframeR.position.set ( poschair.x+15, poschair.y+110, poschair.z );
     chairframeR.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), 0);
     snareframeR = new THREE.Object3D();
-    snareframeR.position.set (30, 140, -50) ;
-    snareframeR.quaternion.setFromEuler(new THREE.Euler(0, Math.PI/3, 0, 'YZX'));
+    snareframeR.position.set (-10, 140, -20) ;
+    snareframeR.quaternion.setFromEuler(new THREE.Euler(0, Math.PI/5, 0, 'YZX'));
     standbyframeR = new THREE.Object3D();
     standbyframeR.position.set ( poschair.x+30, poschair.y+170, poschair.z-10);
     standbyframeR.quaternion.setFromEuler(new THREE.Euler(Math.PI/12, Math.PI/4, 0, 'YZX'));
@@ -298,10 +298,10 @@ function setFrame(){
     tomLwframeR.position.set ( 90, 180, -80);
     tomLwframeR.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, Math.PI/14, 0, 'YZX'));
     tomFlframeR = new THREE.Object3D();
-    tomFlframeR.position.set ( 30, 135, -45);
-    tomFlframeR.quaternion.setFromEuler(new THREE.Euler( 0, -Math.PI/3, 0, 'YZX'));
+    tomFlframeR.position.set ( 90, 135,-20);
+    tomFlframeR.quaternion.setFromEuler(new THREE.Euler( 0, -Math.PI/10, 0, 'YZX'));
     crashframeR = new THREE.Object3D();
-    crashframeR.position.set ( -50, 215, -70);
+    crashframeR.position.set ( -40, 215, -80);
     crashframeR.quaternion.setFromEuler(new THREE.Euler(Math.PI/7, Math.PI/8, 0, 'YZX'));
     rideframeR = new THREE.Object3D();
     rideframeR.position.set ( 110, 215, -40);
@@ -311,14 +311,14 @@ function setFrame(){
     chairframeL.position.set ( poschair.x-15, poschair.y+110, poschair.z);
     chairframeL.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), 0);
     snareframeL = new THREE.Object3D();
-    snareframeL.position.set (-30, 140, 0); 
-    snareframeL.quaternion.setFromEuler(new THREE.Euler(0, Math.PI/6, 0, 'YZX'));
+    snareframeL.position.set (-60, 140, 10); 
+    snareframeL.quaternion.setFromEuler(new THREE.Euler(0, Math.PI/12, 0, 'YZX'));
     standbyframeL = new THREE.Object3D();
     standbyframeL.position.set ( poschair.x-30, poschair.y+155, poschair.z-10);
     standbyframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/12, -Math.PI/4, 0, 'YZX'));
     hihatframeL = new THREE.Object3D();
-    hihatframeL.position.set ( -145, 175, -5);
-    hihatframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, -Math.PI/14, 0, 'YZX'));
+    hihatframeL.position.set ( -105 ,175, -5);
+    hihatframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, Math.PI/8, 0, 'YZX'));
     tomHhframeL = new THREE.Object3D();
     tomHhframeL.position.set ( -60, 180, -80);
     tomHhframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/8, -Math.PI/14, 0, 'YZX'));
@@ -329,8 +329,8 @@ function setFrame(){
     tomFlframeL.position.set ( 20, 135, -75);
     tomFlframeL.quaternion.setFromEuler(new THREE.Euler(0, -Math.PI/3, 0, 'YZX'));
     crashframeL = new THREE.Object3D();
-    crashframeL.position.set ( -125, 220, -70);
-    crashframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/7, -Math.PI/14, 0, 'YZX'));
+    crashframeL.position.set ( -60, 215, -70);
+    crashframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/7, Math.PI/8, 0, 'YZX'));
     rideframeL = new THREE.Object3D();
     rideframeL.position.set ( 40, 215, -70);
     rideframeL.quaternion.setFromEuler(new THREE.Euler(Math.PI/7, -Math.PI/4, 0, 'YZX'));    
@@ -387,17 +387,16 @@ function init() {
     stick1.frame2 = chairframeR.clone();
     stick1.setT(0.5);
     stick1.startOneCycle();
+    stick1.group.children[3].material.color.setHex(0x0000ff);
     frame.add(stick1.object);
-  /*  var axisHelperR = new THREE.AxisHelper(55);
-    stick1.object.add(axisHelperR);
-    var gridHelperR = new THREE.GridHelper( 50, 5);
-    stick1.object.add( gridHelperR );*/
+    
 
 
     stick2.frame1 = chairframeL.clone();
     stick2.frame2 = chairframeL.clone();
     stick2.setT(0.5);
     stick2.startOneCycle();
+    stick2.group.children[3].material.color.setHex(0xff0000);
     frame.add(stick2.object);
    /* var axisHelperL = new THREE.AxisHelper(55);
     stick2.object.add(axisHelperL);
@@ -454,7 +453,7 @@ function init() {
     lightarray[1].target = bass;
 
     var floor = new THREE.Mesh(new THREE.PlaneGeometry(800, 800, 30, 30),
-    new THREE.MeshLambertMaterial({map:THREE.ImageUtils.loadTexture('floor.jpg')}));
+    new THREE.MeshLambertMaterial(/*{map:THREE.ImageUtils.loadTexture('floor.jpg')}*/));
     floor.rotation.x = -Math.PI / 2;
     scene.add(floor);
     floor.castShadow = true; floor.receiveShadow = true;
@@ -616,7 +615,7 @@ function standby(scoreNum){
             timeOuts.push(startplay);
             break;
         case 5:
-            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo5);
+            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo5,true);
             timeOuts.push(startplay);
             break;
     }
@@ -702,6 +701,9 @@ function HitOnce(intensity, LR, instrument, time) {
                 stick2.setMaxKeysValue(ii);
                 stick2.startOneCycle();
                 var sound = setTimeout(Sound,  (stick2.keys[2].timeS*stick2.T) * 1000, ins, ii);
+        }
+        if(lr === 'null'){
+            var sound = setTimeout(Sound,  (stick2.keys[2].timeS*stick2.T) * 1000, ins, ii);
         }
     }else if(ins === 'b' ){
         

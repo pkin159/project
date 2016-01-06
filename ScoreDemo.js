@@ -596,7 +596,35 @@ var scoredemo4 =[
 	{
 		time: 0,
 	    intensity: 0.8,
+	    instrument:'s',
+	},{
+		time: 0,
+	    intensity: 0.8,
+	    instrument:'hatCl',
+	},{
+		time: 0,
+	    intensity: 0.4,
+	    instrument:'tomFl',
+	},{
+		time: 0,
+	    intensity: 0.4,
 	    instrument:'b',
+	},{
+		time: 0,
+	    intensity: 0.4,
+	    instrument:'tomLw',
+	},{
+		time: 2,
+	    intensity: 0.8,
+	    instrument:'tomLw',
+	},{
+		time: 2,
+	    intensity: 0.4,
+	    instrument:'tomHh',
+	},{
+		time: 2,
+	    intensity: 0.4,
+	    instrument:'ride',
 	},{
 		time: 2,
 	    intensity: 0.8,
@@ -604,27 +632,23 @@ var scoredemo4 =[
 	},{
 		time: 4,
 	    intensity: 0.4,
-	    instrument:'b',
+	    instrument:'tomHh',
 	},{
-		time: 6,
+		time: 4,
 	    intensity: 0.4,
-	    instrument:'b',
+	    instrument:'hatCl',
 	},{
-		time: 1,
-	    intensity: 0.4,
-	    instrument:'s',
-	},{
-		time: 3,
+		time: 4,
 	    intensity: 0.8,
-	    instrument:'s',
+	    instrument:'tomFl',
 	},{
-		time: 5,
+		time: 4,
 	    intensity: 0.4,
 	    instrument:'s',
 	},{
-		time: 7,
+		time: 4,
 	    intensity: 0.4,
-	    instrument:'s',
+	    instrument:'b',
 	}
 ];
 
@@ -648,35 +672,11 @@ var scoredemo5 =[
 		},{
 			time: 0,
 		    intensity: 0.5,
-		    instrument:'hatCl'
+		    instrument:'crash'
 		},{
 			time: 1,
 		    intensity: 0.5,
-		    instrument:'hatCl'
-		},{
-			time: 2,
-		    intensity: 0.5,
-		    instrument:'hatCl'
-		},{
-			time: 3,
-		    intensity: 0.5,
-		    instrument:'hatCl'
-		},{
-			time: 4,
-		    intensity: 0.5,
-		    instrument:'hatCl'
-		},{
-			time: 5,
-		    intensity: 0.5,
-		    instrument:'hatCl'
-		},{
-			time: 6,
-		    intensity: 0.5,
-		    instrument:'hatCl'
-		},{
-			time: 7,
-		    intensity: 0.5,
-		    instrument:'hatCl'
+		    instrument:'crash'
 		}
 ];
 ///0 2 3 3.33 3.67 4 5 5.33 5.67 6 6.33 6.67 7

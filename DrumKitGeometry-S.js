@@ -190,7 +190,7 @@ function Snare() {
         axis.add(maindrum);
 
     axis.position.set(0 ,-50 ,0);
-    axis.quaternion.setFromEuler(new THREE.Euler(0.25, 0, -0.25, 'XZY'));
+    axis.quaternion.setFromEuler(new THREE.Euler(0.25, 0, -0.1, 'XZY'));
 
 
     drum.add(axis);
@@ -905,8 +905,10 @@ function Chair(){
     
 	var standgeometry = new THREE.CylinderGeometry( 8, 8, 80, 32 );
     var standmaterial = new THREE.MeshPhongMaterial({
-    	color: 0x000000
+    	color: 0x000000,transparent: true
     });
+    standmaterial.opacity = 1;
+    console.log(standmaterial);
     var standmesh = new THREE.Mesh(standgeometry, standmaterial);
     standmesh.castShadow = true; standmesh.receiveShadow = true;
     var standbuttongeometry = new THREE.CylinderGeometry( 8, 60, 15, 32 );
@@ -1073,9 +1075,14 @@ function newMesh(){
     var sphere = new THREE.Mesh(geometry3, material);
     sphere.position.set(0, 0, -95);
 
+    var geometry3 = new THREE.CylinderGeometry(1.6, 1.6, 20, 32);
+    var hand = new THREE.Mesh(geometry3, new THREE.MeshPhongMaterial({color:0xff00ff}));
+    hand.rotation.x =Math.PI/2;
+    hand.position.set(0, 0, -20);
+
     a.add(cylinder);
     a.add(cylinder2);
     a.add(sphere);
-
+    a.add(hand);
     return a;
 }

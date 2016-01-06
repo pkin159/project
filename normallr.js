@@ -1,26 +1,169 @@
 function normalLR(score){
 	var scr = score || [];
   var aftscr = [];
-
-  console.log('do lr');
-
+  var check = 0;
+  //console.log('do lr');
+  var tempscr =[];
   scr.sort(function (a,b) {return a.time - b.time})
 
-	for(var i = 0, j = 0 ; i < scr.length; i++){
+
+  for(var i = 0, j = 0, time = 0 ; i < scr.length; i++){
+
+        if(scr[i].time === time){
+          if(scr[i].instrument !=='b')
+            check++;
+        }else{
+          time = scr[i].time;
+          if(check > 2){
+            var temp = [];
+            for(k = i - check-1, g = i; k < g; k++){
+              var priority = {pri: -1, time: 0};
+              var ins = scr[k].instrument;
+              if(ins === 'b'){
+
+                  continue;
+              }
+              switch (ins){
+                case 's':
+                      priority.pri = 0;
+                      priority.time = k;
+                      break;
+                case 'hatOp':
+                      priority.pri = 2;
+                      priority.time = k;
+                      break;
+                case 'hatCl':
+                      priority.pri = 1;
+                      priority.time = k;
+                      break;
+                case 'crash':
+                      priority.pri = 6;
+                      priority.time = k;
+                      break;
+                case 'ride':
+                      priority.pri = 7;
+                      priority.time = k;
+                      break;
+                case 'tomFl':
+                      priority.pri = 3;
+                      priority.time = k;
+                      break;
+                case 'tomHh':
+                      priority.pri = 4;
+                      priority.time = k;
+                      break;
+                case 'tomLw':
+                      priority.pri = 5;
+                      priority.time = k;
+                      break;
+              }
+              console.log(priority);
+              temp.push(priority);
+            }
+            temp.sort(function (a,b) {return a.pri - b.pri})
+            console.log(temp);
+            for(k = 2 ; k< temp.length; k++){
+              var tempscore = {time:0, intensity: 0, instrument: 'null', LR: 'null'};
+              tempscore.time = scr[temp[k].time].time;
+              tempscore.intensity = scr[temp[k].time].intensity;
+              tempscore.instrument = scr[temp[k].time].instrument;
+              tempscr.push(tempscore);
+            }
+          }
+          if(scr[i].instrument === 'b')
+              check = 0;
+          else{
+              check = 1;
+          }
+        }
+  }
+  if(check > 2){
+            var temp = [];
+            for(k = i - check-1, g = i; k < g; k++){
+              var priority = {pri: -1, time: 0};
+              var ins = scr[k].instrument;
+              if(ins === 'b'){
+
+                  continue;
+              }
+              switch (ins){
+                case 's':
+                      priority.pri = 0;
+                      priority.time = k;
+                      break;
+                case 'hatOp':
+                      priority.pri = 2;
+                      priority.time = k;
+                      break;
+                case 'hatCl':
+                      priority.pri = 1;
+                      priority.time = k;
+                      break;
+                case 'crash':
+                      priority.pri = 6;
+                      priority.time = k;
+                      break;
+                case 'ride':
+                      priority.pri = 7;
+                      priority.time = k;
+                      break;
+                case 'tomFl':
+                      priority.pri = 3;
+                      priority.time = k;
+                      break;
+                case 'tomHh':
+                      priority.pri = 4;
+                      priority.time = k;
+                      break;
+                case 'tomLw':
+                      priority.pri = 5;
+                      priority.time = k;
+                      break;
+              }
+              console.log(priority);
+              temp.push(priority);
+            }
+            temp.sort(function (a,b) {return a.pri - b.pri})
+            console.log(temp);
+            for(k = 2 ; k< temp.length; k++){
+              var tempscore = {time:0, intensity: 0, instrument: 'null', LR: 'null'};
+              tempscore.time = scr[temp[k].time].time;
+              tempscore.intensity = scr[temp[k].time].intensity;
+              tempscore.instrument = scr[temp[k].time].instrument;
+              tempscr.push(tempscore);
+            }
+          }
+  console.log(tempscore);
+	for(var i = 0, j = 0, k = 0; i < scr.length; i++){
     var tempscore = {time:0, intensity: 0, instrument: 'null', LR: 'null'};
-		if(scr[i].instrument != 'b'){
-      console.log(true)
-			if(j%2 == 0)
-				tempscore.LR = 'Right';
-      else
-        tempscore.LR = 'Left';
-			j++;
+    if(tempscr.length !== 0){
+      if(scr[i].instrument !== tempscr[k].instrument){
+        if(scr[i].instrument !== 'b'){
+          if(j%2 == 0)
+            tempscore.LR = 'Right';
+          else
+            tempscore.LR = 'Left';
+          j++;
+        }
+      }else{
+        if(k+1 < tempscr.length)
+          k++;
+      }
+    }else{
+      if(scr[i].instrument !== 'b'){
+        if(j%2 == 0)
+          tempscore.LR = 'Right';
+        else
+          tempscore.LR = 'Left';
+        j++;
+      }
     }
     tempscore.time = scr[i].time;
     tempscore.intensity = scr[i].intensity;
     tempscore.instrument = scr[i].instrument;
     aftscr.push(tempscore);
 	}
+  console.log(aftscr);
   return aftscr;
 }
 function normalLRnew(score,bpm){
