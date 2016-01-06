@@ -30,6 +30,7 @@ body {
         <button id = "play3">PlayDemo3</button>
         <button id = "play4">Test</button>
         <button id = "play5">Test2</button>
+        <button id = "play6">Test3</button>
 		<button id = "reset">Reset </button><br>
 
 	</div>
@@ -67,6 +68,7 @@ var demo2 = normalLR(scoredemo2);
 var demo3 = scoredemo3;
 var demo4 = normalLR(scoredemo4);
 var demo5 = normalLR(scoredemo5);
+var demo6 = normalLR(scoredemo6);
 console.log (demo1);
 //////////////////////////////
 
@@ -495,7 +497,7 @@ function animate() {
 var setTimeoutControl = 1;
 var check = 1;
 $('#play').click(function(){
-    
+    reset();
     if(check){
         setTimeoutControl = 1;
         stick1.setT(60/bpm);
@@ -506,7 +508,7 @@ $('#play').click(function(){
     //HitOnce();
 });
 $('#play1').click(function(){
-    
+    reset();
     if(check){
         setTimeoutControl = 1;
         bpm = 120;
@@ -518,7 +520,7 @@ $('#play1').click(function(){
     //HitOnce();
 });
 $('#play2').click(function(){
-    
+    reset();
     if(check){
         setTimeoutControl = 1;
         bpm = 150;
@@ -529,7 +531,7 @@ $('#play2').click(function(){
     }
 });
 $('#play3').click(function(){
-    
+    reset();
     if(check){
         setTimeoutControl = 1;
         bpm = 90;
@@ -540,10 +542,10 @@ $('#play3').click(function(){
     }
 });
 $('#play4').click(function(){
-    
+    reset();
     if(check){
         setTimeoutControl = 1;
-        bpm = 60;
+        bpm = 120;
         stick1.setT(60/bpm);
         stick2.setT(60/bpm);
         standby(4);
@@ -551,13 +553,24 @@ $('#play4').click(function(){
     }
 });
 $('#play5').click(function(){
-    
+    reset();
     if(check){
         setTimeoutControl = 1;
-        bpm = 240;
+        bpm = 120;
         stick1.setT(60/bpm);
         stick2.setT(60/bpm);
         standby(5);
+        check = 0;
+    }
+});
+$('#play6').click(function(){
+    reset();
+    if(check){
+        setTimeoutControl = 1;
+        bpm = 90;
+        stick1.setT(60/bpm);
+        stick2.setT(60/bpm);
+        standby(6);
         check = 0;
     }
 });
@@ -573,9 +586,14 @@ $('#reset').click(function(){
 });
 
 var checkstip = 1;
-function stop(){
-	checkstop ^= 1;
+function reset(){
+	setTimeoutControl = 0;
+    check = 1;
     Stoptimeout();
+    stick1.frame1 = chairframeR.clone();
+    stick2.frame1 = chairframeL.clone();
+    stick1.frame2 = chairframeR.clone();
+    stick2.frame2 = chairframeL.clone();
 }
 
 
@@ -587,8 +605,15 @@ function standby(scoreNum){
     stick2.frame1 = standbyframeL.clone();
 	stick1.frame2 = standbyframeR.clone();
     stick2.frame2 = standbyframeL.clone();
-	for (var i = 0; i < 4; i++) {
-        var motion = setTimeout(HitOnce, i *(60/bpm*1000), 0.5, 'Right','st',i);
+	for (var i = 0; i < 8; i++) {
+        if(i < 4){
+            if(i === 0){
+                var motion = setTimeout(HitOnce, i *(60/bpm*1000), 0.5, 'Right','st',i);
+            }else if(i === 2)
+                var motion = setTimeout(HitOnce, i *(60/bpm*1000), 0.5, 'Right','st',i);
+        }else{
+            var motion = setTimeout(HitOnce, i *(60/bpm*1000), 0.5, 'Right','st',i);
+        }
         timeOuts.push(motion);
     }
     switch(scoreNum){
@@ -615,7 +640,11 @@ function standby(scoreNum){
             timeOuts.push(startplay);
             break;
         case 5:
-            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo5,true);
+            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo5);
+            timeOuts.push(startplay);
+            break;
+        case 6:
+            var startplay = setTimeout(playScore1, i * (60/bpm*1000), demo6);
             timeOuts.push(startplay);
             break;
     }
