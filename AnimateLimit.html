@@ -10,10 +10,11 @@
 }
 #control {
   position: absolute;
-  top: 0px;
+  top: 100px;
   padding: 10px;
-  text-align: center;
-  color: #00ff00
+  text-align: left;
+  right:5%;
+  color: #00ff00;
 }
 body {
     overflow: hidden;
@@ -23,9 +24,9 @@ body {
 
 <body>
 <div id = "control">
-    <button id='play' class='buttonclass'>Play</button>
-    <button id='stop' class='buttonclass'>Stop</button>
-    <button id='accent' class='buttonclass'>Accent</button>
+    <button id='play' class='buttonclass'>Play</button><br>
+    <button id='stop' class='buttonclass'>Stop</button><br>
+    <button id='accent' class='buttonclass'>Accent</button><br>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js"></script>
@@ -68,20 +69,20 @@ var Stick = function () {
     this.T = 4; // in seconds
     this.keys = [{   /////////will be change
         timeS: 0,
-        value: 0
+        value: -0.18
     }, {
         timeS: 0.1,
-        value: 0.2//3.14 / 4
+        value: -0.2//3.14 / 4
     }, {
         timeS: 0.25,
-        value: -.2
+        value: -0.18
     },
        {
         timeS: 0.5,
-        value: 0
+        value: -0.18
     },{
         timeS: 1,
-        value: 0
+        value: -0.18
     }
                 ];
 
@@ -143,37 +144,6 @@ var Stick = function () {
         this.startTime = clock.getElapsedTime();
     }
    
-}
-function newMesh(){
-    a = new THREE.Object3D();
- 
-    var geometry = new THREE.CylinderGeometry(1.4, 1.4, 70, 32);
-    var material = new THREE.MeshPhongMaterial({
-        color: 0xffff00
-    });
-    var cylinder = new THREE.Mesh(geometry, material);
-
-    cylinder.rotation.x = Math.PI / 2;
-    cylinder.position.set(0, 0, -40);
-    cylinder.castShadow = true; cylinder.receiveShadow = true;
-
-    var geometry1 = new THREE.CylinderGeometry(1.4, 0.8, 20, 32);
-    var cylinder2 = new THREE.Mesh(geometry1, material);
-
-    cylinder2.rotation.x = Math.PI / 2;
-    cylinder2.position.set(0, 0, -85);
-    cylinder2.castShadow = true; cylinder2.receiveShadow = true;
-
-    var geometry3 = new THREE.SphereGeometry(1.5, 32, 32);
-    var sphere = new THREE.Mesh(geometry3, material);
-    sphere.position.set(0, 0, -95);
-    sphere.castShadow = true; sphere.receiveShadow = true;
-
-    a.add(cylinder);
-    a.add(cylinder2);
-    a.add(sphere);
-
-    return a;
 }
 
 var camera, scene, renderer, frame, frame1, frame2, light, controls;
@@ -251,12 +221,14 @@ function init() {
     stick1.frame2 = chairframeR.clone();
     stick1.setT(0.5);
     stick1.startOneCycle();
+    stick1.group.children[3].material.color.setHex(0x0000ff);
     frame.add(stick1.object);
     
     stick2.frame1 = chairframeL.clone();
     stick2.frame2 = chairframeL.clone();
     stick2.setT(0.5);
     stick2.startOneCycle();
+    stick2.group.children[3].material.color.setHex(0xff0000);
     frame.add(stick2.object);
 /*
     var axisHelper = new THREE.AxisHelper(55);

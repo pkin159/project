@@ -12,8 +12,9 @@
   position: absolute;
   top: 0px;
   padding: 10px;
-  text-align: center;
-  color: #00ff00
+  text-align: left;
+  right:5%;
+  color: #00ff00;
 }
 body {
     overflow: hidden;
@@ -23,9 +24,9 @@ body {
 
 <body>
 <div id = "control">
-    <button id='play' class='buttonclass'>Play</button>
-    <button id='stop' class='buttonclass'>Stop</button>
-    <button id='accent' class='buttonclass'>Accent</button>
+    <button id='play' class='buttonclass'>Play</button><br>
+    <button id='stop' class='buttonclass'>Stop</button><br>
+    <button id='accent' class='buttonclass'>Accent</button><br>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js"></script>
@@ -144,37 +145,6 @@ var Stick = function () {
     }
    
 }
-function newMesh(){
-    a = new THREE.Object3D();
- 
-    var geometry = new THREE.CylinderGeometry(1.4, 1.4, 70, 32);
-    var material = new THREE.MeshPhongMaterial({
-        color: 0xffff00
-    });
-    var cylinder = new THREE.Mesh(geometry, material);
-
-    cylinder.rotation.x = Math.PI / 2;
-    cylinder.position.set(0, 0, -40);
-    cylinder.castShadow = true; cylinder.receiveShadow = true;
-
-    var geometry1 = new THREE.CylinderGeometry(1.4, 0.8, 20, 32);
-    var cylinder2 = new THREE.Mesh(geometry1, material);
-
-    cylinder2.rotation.x = Math.PI / 2;
-    cylinder2.position.set(0, 0, -85);
-    cylinder2.castShadow = true; cylinder2.receiveShadow = true;
-
-    var geometry3 = new THREE.SphereGeometry(1.5, 32, 32);
-    var sphere = new THREE.Mesh(geometry3, material);
-    sphere.position.set(0, 0, -95);
-    sphere.castShadow = true; sphere.receiveShadow = true;
-
-    a.add(cylinder);
-    a.add(cylinder2);
-    a.add(sphere);
-
-    return a;
-}
 
 var camera, scene, renderer, frame, frame1, frame2, light, controls;
 ////////init
@@ -233,14 +203,14 @@ function init() {
     chairframeR.position.set (snare.position.x+10, snare.position.y+40, snare.position.z+100);
     chairframeR.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), 0);
     snareframeR = new THREE.Object3D();
-    snareframeR.position.set (snare.position.x+9, snare.position.y+40, snare.position.z+90) ;
+    snareframeR.position.set (snare.position.x+9, snare.position.y+35, snare.position.z+90) ;
     snareframeR.quaternion.setFromEuler(new THREE.Euler(0, Math.PI/4, 0, 'YXZ'));
     
     chairframeL = new THREE.Object3D();
     chairframeL.position.set (snare.position.x-10, snare.position.y+40, snare.position.z+100);
     chairframeL.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), 0);
     snareframeL = new THREE.Object3D();
-    snareframeL.position.set (snare.position.x-9, snare.position.y+40, snare.position.z+90) ; 
+    snareframeL.position.set (snare.position.x-9, snare.position.y+35, snare.position.z+90) ; 
     snareframeL.quaternion.setFromEuler(new THREE.Euler(0, -Math.PI/4, 0, 'YXZ'));
 
     frame = new THREE.Object3D();
@@ -251,12 +221,14 @@ function init() {
     stick1.frame2 = chairframeR.clone();
     stick1.setT(0.5);
     stick1.startOneCycle();
+    stick1.group.children[3].material.color.setHex(0x0000ff);
     frame.add(stick1.object);
     
     stick2.frame1 = chairframeL.clone();
     stick2.frame2 = chairframeL.clone();
     stick2.setT(0.5);
     stick2.startOneCycle();
+    stick2.group.children[3].material.color.setHex(0xff0000);
     frame.add(stick2.object);
 /*
     var axisHelper = new THREE.AxisHelper(55);
@@ -437,7 +409,7 @@ function HitOnce(intensity) {
             break;
     }  
 
-    if((time%10 === 0) && time <= 100)
+    if((time%10 === 0) && time <= 80)
         IntensityUPDown(1);
     if(time%10 === 0 && (time > 130 && time < 500))
         BpmUpDown(1);
@@ -476,11 +448,11 @@ function IntensityUPDown(controls){
 
 function BpmUpDown(controls){
     if(controls === 1){
-        gcontrols.bpm +=10;
+        gcontrols.bpm +=20;
         if(gcontrols.bpm >= 500)
             gcontrols.bpm = 500;
     }else if(controls === 0){
-        gcontrols.bpm = gcontrols.bpm - 10;
+        gcontrols.bpm = gcontrols.bpm - 20;
         if(gcontrols.bpm <= 60)
             gcontrols.bpm = 60;
     }
